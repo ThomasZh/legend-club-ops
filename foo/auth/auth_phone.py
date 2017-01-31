@@ -54,21 +54,54 @@ class AuthPhoneLoginHandler(BaseHandler):
         remember = self.get_argument("lg_remember", "")
         logging.info("try login as phone:[%r] pwd:[%r] remember:[%r]", phone, pwd, remember)
 
+        code = self.get_code()
+
         # login
         try:
-            code = self.get_code()
-
-            url = "http://api.7x24hs.com/auth/token"
+            url = "http://api.7x24hs.com/api/auth/tokens"
             http_client = HTTPClient()
-            data = {"code":code,
-                    "login":phone,
+            headers={"Authorization":"Bearer "+code}
+            data = {"action":"login",
+                    "login_type":"phone",
+                    "phone":phone,
                     "pwd":pwd}
             _json = json_encode(data)
             logging.info("request %r body %r", url, _json)
-            response = http_client.fetch(url, method="POST", body=_json)
+            response = http_client.fetch(url, method="POST", headers=headers, body=_json)
             logging.info("got response %r", response.body)
             session_ticket = json_decode(response.body)
+
+            # is admin
+            try:
+                # 添加此帐号到联盟的普通用户帐号表中
+                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/signup"
+                http_client = HTTPClient()
+                _json = json_encode({"role":"user"})
+                headers={"Authorization":"Bearer "+session_ticket['access_token']}
+                response = http_client.fetch(url, method="POST", headers=headers, body=_json)
+                logging.info("got response %r", response.body)
+
+                # 校验是否为联盟管理员
+                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo-as-admin"
+                http_client = HTTPClient()
+                headers={"Authorization":"Bearer "+session_ticket['access_token']}
+                response = http_client.fetch(url, method="GET", headers=headers)
+                logging.info("got response %r", response.body)
+            except:
+                err_title = str( sys.exc_info()[0] );
+                err_detail = str( sys.exc_info()[1] );
+                logging.error("error: %r info: %r", err_title, err_detail)
+                if err_detail == 'HTTP 404: Not Found':
+                    err_msg = "您不是联盟的管理员!"
+                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    return
+                else:
+                    err_msg = "系统故障, 请稍后尝试!"
+                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    return
+
             self.set_secure_cookie("access_token", session_ticket['access_token'])
+            self.set_secure_cookie("expires_at", str(session_ticket['expires_at']))
         except:
             err_title = str( sys.exc_info()[0] );
             err_detail = str( sys.exc_info()[1] );
@@ -77,8 +110,12 @@ class AuthPhoneLoginHandler(BaseHandler):
                 err_msg = "手机号码或密码不正确!"
                 self.render('auth/phone-login.html', err_msg=err_msg)
                 return
+            else:
+                err_msg = "系统故障, 请稍后尝试!"
+                self.render('auth/phone-login.html', err_msg=err_msg)
+                return
 
-        self.redirect('/auth/welcome')
+        self.redirect('/')
 
 
 class AuthPhoneRegisterHandler(BaseHandler):
@@ -93,18 +130,19 @@ class AuthPhoneRegisterHandler(BaseHandler):
         pwd = self.get_argument("reg_pwd", "")
         logging.info("try register as phone:[%r] pwd:[%r]", phone, pwd)
 
+        code = self.get_code()
+
         # register
         try:
-            code = self.get_code()
-
-            url = "http://api.7x24hs.com/auth/accounts"
+            url = "http://api.7x24hs.com/api/auth/accounts"
             http_client = HTTPClient()
-            data = {"code":code,
-                    "login":phone,
+            headers={"Authorization":"Bearer "+code}
+            data = {"login_type":"phone",
+                    "phone":phone,
                     "pwd":pwd}
             _json = json_encode(data)
             logging.info("request %r body %r", url, _json)
-            response = http_client.fetch(url, method="POST", body=_json)
+            response = http_client.fetch(url, method="POST", headers=headers, body=_json)
             logging.info("got response %r", response.body)
             session_ticket = json_decode(response.body)
         except:
@@ -120,7 +158,6 @@ class AuthPhoneRegisterHandler(BaseHandler):
         self.render('auth/phone-register.html', err_msg=err_msg)
 
 
-
 class AuthPhoneLostPwdHandler(BaseHandler):
     def get(self):
         err_msg = "When you fill in your registered email address, you will be sent instructions on how to reset your password."
@@ -134,18 +171,19 @@ class AuthPhoneLostPwdHandler(BaseHandler):
         pwd = self.get_argument("reset_pwd", "")
         logging.info("try to reset password phone=[%r] verify_code=[%r] pwd=[%r]", phone, verify_code, pwd)
 
-        try:
-            code = self.get_code()
+        code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/phone/reset-pwd"
+        try:
+            url = "http://api.7x24hs.com/api/auth/pwds"
             http_client = HTTPClient()
-            data = {"code":code,
+            headers={"Authorization":"Bearer "+code}
+            data = {"login_type":"phone",
                     "phone":phone,
                     "verify_code":verify_code,
                     "pwd":pwd}
             _json = json_encode(data)
             logging.info("request %r body %r", url, _json)
-            response = http_client.fetch(url, method="POST", body=_json)
+            response = http_client.fetch(url, method="PUT", headers=headers, body=_json)
             logging.info("got response %r", response.body)
         except:
             err_title = str( sys.exc_info()[0] );
@@ -180,16 +218,18 @@ class AuthPhoneVerifyCodeHandler(BaseHandler):
         phone = req['phone']
         logging.info("try to send lost password sms to [%r]", phone)
 
-        try:
-            code = self.get_code()
+        code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/phone/verify-code"
+        try:
+            url = "http://api.7x24hs.com/api/auth/verify-codes"
             http_client = HTTPClient()
-            data = {"code":code,
+            headers={"Authorization":"Bearer "+code}
+            data = {"action":"lost-pwd",
+                    "login_type":"phone",
                     "phone":phone}
             _json = json_encode(data)
             logging.info("request %r body %r", url, _json)
-            response = http_client.fetch(url, method="POST", body=_json)
+            response = http_client.fetch(url, method="POST", headers=headers, body=_json)
             logging.info("got response %r", response.body)
         except:
             err_title = str( sys.exc_info()[0] );

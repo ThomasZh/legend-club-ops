@@ -59,7 +59,7 @@ class AuthEmailLoginHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/token"
+            url = "http://api.7x24hs.com/api/auth/token"
             http_client = HTTPClient()
             data = {"code":code,
                     "login":email,
@@ -69,7 +69,34 @@ class AuthEmailLoginHandler(BaseHandler):
             response = http_client.fetch(url, method="POST", body=_json)
             logging.info("got response %r", response.body)
             session_ticket = json_decode(response.body)
+
+            # is admin
+            try:
+                # 添加此帐号到联盟的普通用户帐号表中
+                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo"
+                http_client = HTTPClient()
+                _json = json_encode({"filter":"user"})
+                headers={"Authorization":"Bearer "+session_ticket['access_token']}
+                response = http_client.fetch(url, method="PUT", headers=headers, body=_json)
+                logging.info("got response %r", response.body)
+
+                # 校验是否为联盟管理员
+                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo"
+                http_client = HTTPClient()
+                headers={"Authorization":"Bearer "+session_ticket['access_token']}
+                response = http_client.fetch(url, method="GET", headers=headers)
+                logging.info("got response %r", response.body)
+            except:
+                err_title = str( sys.exc_info()[0] );
+                err_detail = str( sys.exc_info()[1] );
+                logging.error("error: %r info: %r", err_title, err_detail)
+                if err_detail == 'HTTP 404: Not Found':
+                    err_msg = "您不是联盟的管理员!"
+                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    return
+
             self.set_secure_cookie("access_token", session_ticket['access_token'])
+            self.set_secure_cookie("expires_at", str(session_ticket['expires_at']))
         except:
             err_title = str( sys.exc_info()[0] );
             err_detail = str( sys.exc_info()[1] );
@@ -79,7 +106,7 @@ class AuthEmailLoginHandler(BaseHandler):
                 self.render('auth/email-login.html', err_msg=err_msg)
                 return
 
-        self.redirect('/auth/welcome')
+        self.redirect('/')
 
 
 class AuthEmailRegisterHandler(BaseHandler):
@@ -98,7 +125,7 @@ class AuthEmailRegisterHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/accounts"
+            url = "http://api.7x24hs.com/api/auth/accounts"
             http_client = HTTPClient()
             data = {"code":code,
                     "login":email,
@@ -135,7 +162,7 @@ class AuthEmailForgotPwdHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/email/forgot-pwd"
+            url = "http://api.7x24hs.com/api/auth/email/forgot-pwd"
             http_client = HTTPClient()
             data = {"code":code,
                     "email":email}
@@ -180,7 +207,7 @@ class AuthEmailResetPwdHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/email/reset-pwd"
+            url = "http://api.7x24hs.com/api/auth/email/reset-pwd"
             http_client = HTTPClient()
             data = {"code":code,
                     "email":email,
@@ -224,14 +251,15 @@ class AuthWelcomeHandler(AuthorizationHandler):
 
 class AuthLogoutHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
-    def post(self):
+    def get(self):
         access_token = self.get_secure_cookie("access_token")
 
         # logout
-        url = "http://api.7x24hs.com/auth/token"
+        url = "http://api.7x24hs.com/api/auth/tokens"
         http_client = HTTPClient()
         response = http_client.fetch(url, method="DELETE", headers={"Authorization":"Bearer "+access_token})
         logging.info("got response %r", response.body)
         self.clear_cookie("access_token")
+        self.clear_cookie("expires_at")
 
-        self.redirect("/auth/welcome");
+        self.redirect("/");

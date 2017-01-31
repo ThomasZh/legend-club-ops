@@ -196,12 +196,12 @@ def hash_pwd(md5pwd, salt):
 
 class PageNotFoundHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('comm/page_404.html')
+        self.render('comm/page-404.html')
 
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_code(self):
-        url = "http://api.7x24hs.com/auth/code"
+        url = "http://api.7x24hs.com/api/auth/codes"
         http_client = HTTPClient()
         data = {"appid":"7x24hs:blog",
                 "app_secret":"2518e11b3bc89ebec594350d5739f29e"}
@@ -212,12 +212,57 @@ class BaseHandler(tornado.web.RequestHandler):
         code = session_code['code']
         return code
 
+    def get_myinfo_basic(self):
+        access_token = self.get_secure_cookie("access_token")
 
-class AuthorizationHandler(tornado.web.RequestHandler):
+        url = "http://api.7x24hs.com/api/myinfo?filter=basic"
+        http_client = HTTPClient()
+        headers={"Authorization":"Bearer "+access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        myinfo = json_decode(response.body)
+        logging.info("got myinfo %r", myinfo)
+        return myinfo
+
+    def write_error(self, status_code, **kwargs):
+        host = self.request.headers['Host']
+        logging.info("got host %r", host)
+
+        try:
+            reason = ""
+            for line in traceback.format_exception(*kwargs["exc_info"]):
+                if "HTTP 404: Not Found" in line:
+                    self.render('comm/page-404.html')
+                    self.finish()
+                reason += line
+            logging.info("got status_code %r reason %r", status_code, reason)
+
+            params = {"app":"club-ops", "sys":host, "level":status_code, "message": reason}
+            url = url_concat("http://kit.7x24hs.com/api/sys-error", params)
+            http_client = HTTPClient()
+            _json = json_encode(params)
+            response = http_client.fetch(url, method="POST", body=_json)
+            logging.info("got response.body %r", response.body)
+        except:
+            logging.warn("write log to http://kit.7x24hs.com/api/sys-error error")
+
+        self.render("comm/page-500.html",
+                status_code=status_code)
+
+
+class AuthorizationHandler(BaseHandler):
     def get_current_user(self):
         access_token = self.get_secure_cookie("access_token")
-        logging.info("got access_token %r from cookie", access_token)
         if not access_token:
             return None
         else:
-            return access_token
+            logging.info("got access_token %r from cookie", access_token)
+            expires_at = self.get_secure_cookie("expires_at")
+            if not expires_at:
+                return None
+            else:
+                logging.info("got expires_at %r from cookie", expires_at)
+                _timestamp = int(time.time())
+                if int(expires_at) > _timestamp:
+                    return access_token
+                else:
+                    return None
