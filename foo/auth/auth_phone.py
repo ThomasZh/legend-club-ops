@@ -71,18 +71,18 @@ class AuthPhoneLoginHandler(BaseHandler):
             logging.info("got response %r", response.body)
             session_ticket = json_decode(response.body)
 
-            # is admin
+            # is ops
             try:
-                # 添加此帐号到联盟的普通用户帐号表中
-                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/signup"
+                # 添加此帐号到俱乐部的普通用户帐号表中
+                url = "http://api.7x24hs.com/api/clubs/"+CLUB_ID+"/signup"
                 http_client = HTTPClient()
                 _json = json_encode({"role":"user"})
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
                 response = http_client.fetch(url, method="POST", headers=headers, body=_json)
                 logging.info("got response %r", response.body)
 
-                # 校验是否为联盟管理员
-                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo-as-admin"
+                # 校验是否为俱乐部管理员
+                url = "http://api.7x24hs.com/api/clubs/"+CLUB_ID+"/myinfo-as-ops"
                 http_client = HTTPClient()
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
                 response = http_client.fetch(url, method="GET", headers=headers)
@@ -92,7 +92,7 @@ class AuthPhoneLoginHandler(BaseHandler):
                 err_detail = str( sys.exc_info()[1] );
                 logging.error("error: %r info: %r", err_title, err_detail)
                 if err_detail == 'HTTP 404: Not Found':
-                    err_msg = "您不是联盟的管理员!"
+                    err_msg = "您不是俱乐部的管理员!"
                     self.render('auth/phone-login.html', err_msg=err_msg)
                     return
                 else:

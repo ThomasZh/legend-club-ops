@@ -47,7 +47,7 @@
       <div class="col-md-3 left_col">
         <div class="left_col scroll-view">
           <div class="navbar nav_title" style="border: 0;">
-            <a href="/" class="site_title"><i class="fa fa-support"></i> <span>传奇联盟</span></a>
+            <a href="/" class="site_title"><i class="fa fa-support"></i> <span>璟天俱乐部</span></a>
           </div>
 
           <div class="clearfix"></div>
@@ -78,7 +78,7 @@
         <div class="">
           <div style="height:auto;" class="page-title">
             <div class="title_left">
-              <h3>联盟管理员</h3>
+              <h3>俱乐部管理员</h3>
             </div>
 
             <div class="clearfix"></div>
@@ -229,7 +229,7 @@
 
           $.ajax({
             type: "POST",
-            url: "/api/leagues/{{ league_id }}/administrators/" + _self.admin.account_id + "/demote",
+            url: "/api/clubs/{{ club_id }}/operators/" + _self.admin.account_id + "/demote",
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
@@ -269,7 +269,7 @@
 
           $.ajax({
             type: "POST",
-            url: "/api/leagues/{{ league_id }}/administrators/" + _self.user.account_id + "/promote",
+            url: "/api/clubs/{{ club_id }}/operators/" + _self.user.account_id + "/promote",
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
@@ -308,7 +308,7 @@
 
           $.ajax({
             type: "GET",
-            url: "/api/leagues/{{ league_id }}/administrators?idx=" + idx + "&limit=" + limit,
+            url: "/api/clubs/{{ club_id }}/operators?idx=" + idx + "&limit=" + limit,
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {

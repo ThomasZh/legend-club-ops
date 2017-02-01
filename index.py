@@ -15,7 +15,7 @@ import tornado.web
 import router
 
 
-define("port", default=8017, help="run on the given port", type=int)
+define("port", default=8025, help="run on the given port", type=int)
 define("debug", default=True, help="run in debug mode")
 
 
@@ -30,7 +30,7 @@ def main():
         static_path=os.path.join(os.path.dirname(__file__), "static"),
         xsrf_cookies=False,
         debug=options.debug,
-        login_url="/auth/phone/login",
+        login_url="/ops/auth/phone/login",
         ssl_options={
            "certfile": os.path.join(os.path.abspath("."), "7x24hs.com.crt"),
            "keyfile": os.path.join(os.path.abspath("."), "7x24hs.com.key"),

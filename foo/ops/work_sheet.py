@@ -76,16 +76,17 @@ class ProfileEditHandler(AuthorizationHandler):
         self.redirect("/")
 
 
-class AdministratorsHandler(AuthorizationHandler):
+class OperatorsHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         admin = self.get_myinfo_basic()
 
-        self.render('ops/administrators.html',
+        self.render('ops/operators.html',
                 admin=admin,
-                league_id=LEAGUE_ID)
+                league_id=LEAGUE_ID,
+                club_id=CLUB_ID)
 
 
 class TodoListHandler(AuthorizationHandler):
