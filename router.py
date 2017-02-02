@@ -34,6 +34,10 @@ def map():
         (r'/ops/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
         (r'/ops/operators', getattr(work_sheet, 'OperatorsHandler')),
         (r'/ops/todo-list', getattr(work_sheet, 'TodoListHandler')),
+        (r'/ops/articles/create', getattr(work_sheet, 'ArticlesCreateHandler')),
+        (r'/ops/articles/draft', getattr(work_sheet, 'ArticlesDraftHandler')),
+        (r'/ops/articles/publish', getattr(work_sheet, 'ArticlesPublishHandler')),
+        (r'/ops/articles/edit', getattr(work_sheet, 'ArticlesEditHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))

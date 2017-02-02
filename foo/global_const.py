@@ -29,7 +29,7 @@ MONGO_PWD = "123456"
 
 TOKEN_EXPIRES_IN = 7200 # 2hours
 LEAGUE_ID = "f24794c7e1d511e68c0aa45e60efbf2d"
-CLUB_ID = "41e264a8e7c711e69a2700163e023e51"
+CLUB_ID = "4b870e98e88811e6b0c900163e023e51"
 
 DEFAULT_USER_AVATAR = "http://tripc2c-person-face.b0.upaiyun.com/default/user.png"
 DEFAULT_USER_NICKNAME = "匿名"

@@ -45,18 +45,18 @@ class OpsIndexHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        admin = self.get_myinfo_basic()
+        ops = self.get_myinfo_basic()
         self.render('ops/index.html',
-                admin=admin)
+                ops=ops)
 
 
 class ProfileEditHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        admin = self.get_myinfo_basic()
+        ops = self.get_myinfo_basic()
         self.render('ops/profile-edit.html',
-                admin=admin)
+                ops=ops)
 
     @tornado.web.authenticated  # if no session, redirect to login page
     def post(self):
@@ -81,11 +81,10 @@ class OperatorsHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
-        admin = self.get_myinfo_basic()
+        ops = self.get_myinfo_basic()
 
         self.render('ops/operators.html',
-                admin=admin,
-                league_id=LEAGUE_ID,
+                ops=ops,
                 club_id=CLUB_ID)
 
 
@@ -94,8 +93,80 @@ class TodoListHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
-        admin = self.get_myinfo_basic()
+        ops = self.get_myinfo_basic()
 
         self.render('ops/todo-list.html',
-                admin=admin,
-                league_id=LEAGUE_ID)
+                ops=ops,
+                club_id=CLUB_ID)
+
+
+class ArticlesCreateHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        ops = self.get_myinfo_basic()
+
+        self.render('article/create.html',
+                ops=ops,
+                club_id=CLUB_ID)
+
+
+class ArticlesDraftHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        params = {"filter":"club", "club_id":CLUB_ID, "status":"draft"}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+
+        ops = self.get_myinfo_basic()
+
+        self.render('article/draft.html',
+                ops=ops,
+                club_id=CLUB_ID,
+                articles=articles)
+
+
+class ArticlesPublishHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        params = {"filter":"club", "club_id":CLUB_ID, "status":"publish"}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+
+        ops = self.get_myinfo_basic()
+
+        self.render('article/publish.html',
+                ops=ops,
+                club_id=CLUB_ID,
+                articles=articles)
+
+
+class ArticlesEditHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        params = {"filter":"club", "club_id":CLUB_ID, "status":"publish"}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+
+        ops = self.get_myinfo_basic()
+
+        self.render('article/edit.html',
+                ops=ops,
+                club_id=CLUB_ID,
+                articles=articles)

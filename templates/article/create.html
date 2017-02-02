@@ -78,7 +78,7 @@
         <div class="">
           <div style="height:auto;" class="page-title">
             <div class="title_left">
-              <h3>个人信息</h3>
+              <h3>文章</h3>
             </div>
 
             <div class="clearfix"></div>
@@ -88,29 +88,43 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>个人信息修改</h2>
+                    <h2>创建</h2>
                     <ul class="nav navbar-right panel_toolbox">
                     </ul>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
 
-                    <form class="form-horizontal form-label-left" enctype="multipart/form-data" action="/ops/profile/edit" method="POST">
+                    <form id="create-form" class="form-horizontal form-label-left" enctype="multipart/form-data" onsubmit="return false;">
 
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nickname">昵称 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="title">标题 <span class="required">*</span>
                           </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" name="nickname" value="{{ ops['nickname'] }}" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="title" name="title" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="avatar">头像 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="subtitle">副标题 <span class="required">*</span>
+                          </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="subtitle" name="subtitle" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="img">背景图片 <span class="required">*</span>
                           </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="file" id="file" name="file" class="form-control col-md-7 col-xs-12">
-                          <input id="avatar" name="avatar" value="{{ ops['avatar'] }}" type="hidden" />
-                          <small style="color:red;">头像大小：125px * 125px </small>
+                          <input id="img" name="img" type="hidden" />
+                          <small style="color:red;">图片大小：125px * 125px </small>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="paragraphs">文章段落 <span class="required">*</span>
+                          </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <textarea id="paragraphs" name="paragraphs" rows=6 class="form-control col-md-7 col-xs-12"></textarea>
                         </div>
                       </div>
                   </div>
@@ -118,7 +132,7 @@
                   <!-- <div class="ln_solid"></div> -->
                   <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                      <button type="submit" class="btn btn-success">提交修改</button>
+                      <button type="submit" class="btn btn-success">创建</button>
                     </div>
                   </div>
 
@@ -156,6 +170,8 @@
   <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
 
   <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
+  <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
 
   <!-- fileinput -->
   <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
@@ -169,11 +185,7 @@
       'showCaption': false, //是否显示标题
       'showUpload': false, //是否显示上传按钮
       'showRemove': false, //拖到图片区域
-      'initialPreview': ['<img src=\'{{ ops["avatar"] }}\'
-        class = \'file-preview-image\'
-        alt = \'Old picture\'
-        title = "Old picture" > '
-      ],
+      'initialPreview': [],
     });
     var element1 = document.getElementById("file");
     element1.addEventListener("change", uploadHandle, false);
@@ -182,8 +194,7 @@
       var file = document.getElementById('file').files[0];
       //alert(file.name);
       var imgUrl = uploadUpyun(file, 'file');
-      alert(imgUrl)
-      document.getElementById("avatar").value = imgUrl;
+      document.getElementById("img").value = imgUrl;
     }
 
     function uuid() {
@@ -221,7 +232,7 @@
 
       var d = new Date();
       var month = d.getMonth() + 1;
-      var filename = '/avatar/' + d.getFullYear() + '/' + month + '/' + d.getDate() + '/' + uuid() + ext;
+      var filename = '/articles/bg/' + d.getFullYear() + '/' + month + '/' + d.getDate() + '/' + uuid() + ext;
       console.log(filename);
       instance.upload(filename);
 
@@ -270,6 +281,69 @@
       if (this.checked)
         $('form .alert').remove();
     }).prop('checked', false);
+  </script>
+
+  <script>
+    $(function() {
+      // Create Form
+      //----------------------------------------------
+      // Validation
+      $("#create-form").validate({
+        rules: {
+          title: {
+            required: true,
+          },
+          subtitle: {
+            required: true,
+          },
+          img: {
+            required: true,
+          },
+          paragraphs: {
+            required: true,
+          },
+        },
+        errorClass: "form-invalid",
+        submitHandler: function(form) {
+          console.log('create article');
+
+          var title = $("#title").val();
+          var subtitle = $("#subtitle").val();
+          var img = $("#img").val();
+          var paragraphs = $("#paragraphs").val();
+          var data = {
+            "title": title,
+            "subtitle": subtitle,
+            "img": img,
+            "paragraphs": paragraphs,
+          };
+          var json = JSON.stringify(data);
+          console.log(json);
+
+          $.ajax({
+            type: "POST",
+            url: "/api/articles",
+            data: json,
+            dataType: "json",
+            contentType: 'application/json',
+            success: function(data, status, xhr) {
+              location.href = "/ops/articles/draft";
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+              console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+              if (XMLHttpRequest.status == 200) {
+                location.href = "/ops/articles/draft";
+              } else {
+                $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+              }
+            },
+            complete: function(XMLHttpRequest, textStatus) {
+              this; // 调用本次AJAX请求时传递的options参数
+            }
+          });
+        }
+      });
+    });
   </script>
 
 </body>
