@@ -156,17 +156,18 @@ class ArticlesEditHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
+        article_id = self.get_argument("id", "")
+        logging.info("get article_id=[%r] from argument", article_id)
 
-        params = {"filter":"club", "club_id":CLUB_ID, "status":"publish"}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        url = "http://api.7x24hs.com/api/articles/"+article_id
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
+        article = json_decode(response.body)
 
         ops = self.get_myinfo_basic()
 
         self.render('article/edit.html',
                 ops=ops,
                 club_id=CLUB_ID,
-                articles=articles)
+                article=article)

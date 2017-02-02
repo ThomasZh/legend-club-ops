@@ -169,11 +169,8 @@
       'showCaption': false, //是否显示标题
       'showUpload': false, //是否显示上传按钮
       'showRemove': false, //拖到图片区域
-      'initialPreview': ['<img src=\'{{ ops["avatar"] }}\'
-        class = \'file-preview-image\'
-        alt = \'Old picture\'
-        title = "Old picture" > '
-      ],
+      'initialPreview':
+      'initialPreview': ['<img src="{{ ops['avatar'] }}" class="file-preview-image" alt="Old picture" title="Old picture">'],
     });
     var element1 = document.getElementById("file");
     element1.addEventListener("change", uploadHandle, false);

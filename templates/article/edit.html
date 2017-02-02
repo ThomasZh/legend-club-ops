@@ -88,7 +88,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>创建</h2>
+                    <h2>编辑</h2>
                     <ul class="nav navbar-right panel_toolbox">
                     </ul>
                     <div class="clearfix"></div>
@@ -101,14 +101,14 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="title">标题 <span class="required">*</span>
                           </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="title" name="title" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="title" name="title" value="{{ article['title'] }}" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="subtitle">副标题 <span class="required">*</span>
                           </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="subtitle" name="subtitle" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="subtitle" name="subtitle" value="{{ article['subtitle'] }}" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
@@ -116,7 +116,7 @@
                           </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="file" id="file" name="file" class="form-control col-md-7 col-xs-12">
-                          <input id="img" name="img" type="hidden" />
+                          <input id="img" name="img" value="{{ article['img'] }}" type="hidden" />
                           <small style="color:red;">图片大小：125px * 125px </small>
                         </div>
                       </div>
@@ -124,7 +124,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="paragraphs">文章段落 <span class="required">*</span>
                           </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <textarea id="paragraphs" name="paragraphs" rows=6 class="form-control col-md-7 col-xs-12"></textarea>
+                          <textarea id="paragraphs" name="paragraphs" rows=6 class="form-control col-md-7 col-xs-12">{{ article['paragraphs'] }}</textarea>
                         </div>
                       </div>
                   </div>
@@ -132,7 +132,7 @@
                   <!-- <div class="ln_solid"></div> -->
                   <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                      <button type="submit" class="btn btn-success">创建</button>
+                      <button type="submit" class="btn btn-success">保存</button>
                     </div>
                   </div>
 
@@ -185,7 +185,7 @@
       'showCaption': false, //是否显示标题
       'showUpload': false, //是否显示上传按钮
       'showRemove': false, //拖到图片区域
-      'initialPreview': [],
+      'initialPreview': ['<img src="{{ article['img'] }}" class="file-preview-image" alt="Old picture" title="Old picture">'],
     });
     var element1 = document.getElementById("file");
     element1.addEventListener("change", uploadHandle, false);
@@ -321,8 +321,8 @@
           console.log(json);
 
           $.ajax({
-            type: "POST",
-            url: "/api/articles",
+            type: "PUT",
+            url: "/api/articles/{{ article['_id'] }}",
             data: json,
             dataType: "json",
             contentType: 'application/json',
