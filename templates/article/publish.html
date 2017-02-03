@@ -101,18 +101,22 @@
                         <div class="x_content">
                           <div class="thumbnail">
                             <div class="image view view-first">
-                              <a href="/ops/clubs/articles/{{ article['_id'] }}">
+                              <a href="/ops/articles/edit?id={{ article['_id'] }}"">
                                 <img style="width: 100%; display: block;" src="{{ article['img'] }}" alt="image" />
                               </a>
                             </div>
                           </div>
                           <p>{{ article['title'] }}</p>
-                          <p>{{ article['subtitle'] }}</p>
+                          <p>
+                            {% for category in article['categories'] %}
+                              {{ category['title'] }}&nbsp;
+                            {% end %}
+                          </p>
                           <p>{{ article['publish_time'] }}</p>
                           <div class="divider"></div>
                           <p>
-                            <a onclick="pub('{{ article['_id'] }}')" class="btn btn-info btn-xs">
-                              <i class="fa fa-pencil"></i> 编辑 </a>
+                            <a href="/ops/articles/edit?id={{ article['_id'] }}" class="btn ap_del btn-info btn-xs">
+                              <i class="fa fa-pencil-o"></i> 编辑 </a>
                           </p>
                         </div>
                       </div>

@@ -101,13 +101,17 @@
                         <div class="x_content">
                           <div class="thumbnail">
                             <div class="image view view-first">
-                              <a href="/ops/clubs/articles/{{ article['_id'] }}">
+                              <a href="/ops/articles/edit?id={{ article['_id'] }}">
                                 <img style="width: 100%; display: block;" src="{{ article['img'] }}" alt="image" />
                               </a>
                             </div>
                           </div>
                           <p>{{ article['title'] }}</p>
-                          <p>{{ article['subtitle'] }}</p>
+                          <p>
+                            {% for category in article['categories'] %}
+                              {{ category['title'] }}&nbsp;
+                            {% end %}
+                          </p>                          
                           <p>{{ article['create_time'] }}</p>
                           <div class="divider"></div>
                           <p>
@@ -165,7 +169,7 @@
 
     $.ajax({
       type: "POST",
-      url: "/api/articles/{{ article['_id'] }}/publish",
+      url: "/api/articles/"+id+"/publish",
       dataType: "json",
       contentType: 'application/json',
       success: function(data, status, xhr) {
