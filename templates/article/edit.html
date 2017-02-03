@@ -85,7 +85,7 @@
 
             <div class="row">
 
-              <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="col-md-8 col-sm-8 col-xs-8">
                 <div class="x_panel">
                   <div class="x_title">
                     <h2>编辑</h2>
@@ -140,6 +140,41 @@
 
                 </div>
               </div>
+
+
+              <div id="article-categories" class="col-md-4 col-sm-4 col-xs-4">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>修改文章分类</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <form id="categories-form" action="" method="" onsubmit="return false;" class="form-horizontal form-label-left">
+
+                    <div class="form-group">
+                      <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div v-for="category in categories" class="checkbox">
+                          <input type="checkbox" id="categories" value="category._id" v-model="category.select">
+                          <label for="categories">{{! category.title }}</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                      <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-6">
+                        <button type="button" v-on:click="saveCategories" class="btn btn-success">保存</button>
+                      </div>
+                    </div>
+
+                    </form>
+
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -172,6 +207,7 @@
   <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
   <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
+  <script src="{{ static_url('js/vue-2.1.4.js') }}" type="text/javascript"></script>
 
   <!-- fileinput -->
   <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
@@ -344,6 +380,71 @@
         }
       });
     });
+  </script>
+
+  <script>
+  new Vue({
+    el: '#article-categories',
+    data: {
+      categories: [],
+    },
+    created: function() {
+      this.queryCategories();
+    },
+    methods: {
+      saveCategories: function() {
+        var _self = this;
+        console.log(this.categories);
+        var category_ids = new Array();
+        for (var i=0;i<this.categories.length;i++) {
+          if (this.categories[i].select) {
+            category_ids.push(this.categories[i]._id);
+          }
+        }
+        var data = {'ids': category_ids}
+        var json = JSON.stringify(data);
+        console.log(json);
+
+        $.ajax({
+          type: "POST",
+          url: "/api/articles/{{ article['_id'] }}/categories",
+          data: json,
+          dataType: "json",
+          contentType: 'application/json',
+          success: function(data, status, xhr) {
+            console.log(data);
+            _self.categories = data;
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+          },
+          complete: function(XMLHttpRequest, textStatus) {
+            this; // 调用本次AJAX请求时传递的options参数
+          }
+        });
+      },
+      queryCategories: function() {
+        var _self = this;
+
+        $.ajax({
+          type: "GET",
+          url: "/api/articles/{{ article['_id'] }}/categories",
+          dataType: "json",
+          contentType: 'application/json',
+          success: function(data, status, xhr) {
+            console.log(data);
+            _self.categories = data;
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+          },
+          complete: function(XMLHttpRequest, textStatus) {
+            this; // 调用本次AJAX请求时传递的options参数
+          }
+        });
+      }
+    }
+  });
   </script>
 
 </body>
