@@ -36,6 +36,7 @@ from tornado.escape import json_encode, json_decode
 from tornado.httpclient import *
 from tornado.httputil import url_concat
 from bson import json_util
+import qcloud_video
 
 from comm import *
 from global_const import *
@@ -171,3 +172,66 @@ class ArticlesEditHandler(AuthorizationHandler):
                 ops=ops,
                 club_id=CLUB_ID,
                 article=article)
+
+
+class MomentsAllHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        # multimedia
+        params = {"filter":"club", "club_id":CLUB_ID, "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        multimedias = json_decode(response.body)
+
+        ops = self.get_myinfo_basic()
+
+        self.render('moment/all.html',
+                ops=ops,
+                club_id=CLUB_ID,
+                multimedias=multimedias)
+
+
+class MomentsImagesHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        # multimedia
+        params = {"filter":"club", "club_id":CLUB_ID, "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        multimedias = json_decode(response.body)
+
+        ops = self.get_myinfo_basic()
+
+        self.render('moment/images.html',
+                ops=ops,
+                club_id=CLUB_ID,
+                multimedias=multimedias)
+
+
+class MomentsVideosHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        # multimedia
+        params = {"filter":"club", "club_id":CLUB_ID, "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        multimedias = json_decode(response.body)
+
+        ops = self.get_myinfo_basic()
+
+        self.render('moment/videos.html',
+                ops=ops,
+                club_id=CLUB_ID,
+                multimedias=multimedias)
