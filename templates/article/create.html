@@ -294,9 +294,13 @@
             var file1 = document.getElementById('file1').files[0];
             //alert(file.name);
             var imgUrl = uploadUpyun(file1, 'file1');
+            $('#loadingToast').show();
             document.getElementById("img").value = imgUrl;
         }
-
+        document.addEventListener('uploaded',function(e) {
+          //alert('uploaded');
+          $('#loadingToast').hide();
+        });
 
         function uuid() {
             var s = [];
@@ -337,6 +341,7 @@
             console.log(filename);
             instance.upload(filename);
 
+
             return 'https://tripc2c-club-title.b0.upaiyun.com' + filename;
         }
     </script>
@@ -357,7 +362,7 @@
                     img: {
                         required: true,
                     },
-                    paragraphs: {
+                    editor: {
                         required: true,
                     },
                 },
@@ -368,7 +373,7 @@
                     var title = $("#title").val();
                     var subtitle = $("#subtitle").val();
                     var img = $("#img").val();
-                    var paragraphs = $("#paragraphs").val();
+                    var paragraphs = $("#editor").html();
                     var data = {
                         "title": title,
                         "subtitle": subtitle,

@@ -29,9 +29,6 @@
   <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="{{ static_url('css/weui.min.css') }}">
 
-  <!-- Custom styling plus plugins -->
-  <!-- <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
-  <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" /> -->
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
 
@@ -214,6 +211,7 @@
                                               </div>
                                           </div>
 
+
                                           <div id="editor" class="editor-wrapper"></div>
 
                                           <!-- <textarea name="descr" id="descr" style="display:none;"></textarea> -->
@@ -315,12 +313,33 @@
   <script src="{{ static_url('upyun/js/upyun-mu.js') }}"></script>
 
   <script>
+
+  // function coder(str) {
+  //     var s = "";
+  //     if (str.length == 0) return "";
+  //     for (var i = 0; i < str.length; i++) {
+  //         switch (str.substr(i, 1)) {
+  //             case "<": s += "&lt;"; break;
+  //             case ">": s += "&gt;"; break;
+  //             case "&": s += "&amp;"; break;
+  //             case " ": s += "&nbsp;"; break;
+  //             case "\"": s += "&quot;"; break;
+  //             default: s += str.substr(i, 1); break;
+  //         }
+  //     }
+  //     return s;
+  // }
+  // var html = coder("{{ article['paragraphs'] }}");
+  // // alert(html);
+  //  $("#editor").html(html);
+
       // with plugin options
       $("#file1").fileinput({
           'showCaption': false, //是否显示标题
           'showUpload': false, //是否显示上传按钮
           'showRemove': false, //拖到图片区域
-          'initialPreview': [],
+          'initialPreview':
+            ['<img src="{{ article['img'] }}" class="file-preview-image" alt="Old picture" title="Old picture">'],
       });
       var element1 = document.getElementById("file1");
       element1.addEventListener("change", uploadHandle, false);
@@ -329,9 +348,13 @@
           var file1 = document.getElementById('file1').files[0];
           //alert(file.name);
           var imgUrl = uploadUpyun(file1, 'file1');
+          $('#loadingToast').show();
           document.getElementById("img").value = imgUrl;
       }
-
+      document.addEventListener('uploaded',function(e) {
+        //alert('uploaded');
+        $('#loadingToast').hide();
+      });
 
       function uuid() {
           var s = [];
@@ -381,6 +404,8 @@
       // Create Form
       //----------------------------------------------
       // Validation
+
+
       $("#create-form").validate({
         rules: {
           title: {
@@ -403,7 +428,8 @@
           var title = $("#title").val();
           var subtitle = $("#subtitle").val();
           var img = $("#img").val();
-          var paragraphs = $("#paragraphs").val();
+          var paragraphs = $("#editor").html();
+          console.log(paragraphs);
           var data = {
             "title": title,
             "subtitle": subtitle,
@@ -505,7 +531,26 @@
   </script>
   <!-- bootstrap-wysiwyg -->
   <script>
+  function html_decode(str)
+      {
+        var s = "";
+        if (str.length == 0) return "";
+        s = str;
+        s = s.replace(/&lt;/g, "<");
+        s = s.replace(/&gt;/g, ">");
+        s = s.replace(/&nbsp;/g, " ");
+        s = s.replace(/&#39;/g, "\'");
+        s = s.replace(/&quot;/g, "\"");
+        s = s.replace(/<br>/g, "\n");
+        return s;
+      }
+  var html = html_decode("{{ article['paragraphs'] }}");
+  // alert(html);
+  $("#editor").html(html);
+
       $(document).ready(function() {
+        // alert("{{ article['paragraphs'] }}");
+
           function initToolbarBootstrapBindings() {
               var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
                       'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
