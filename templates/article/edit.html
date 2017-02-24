@@ -314,25 +314,6 @@
 
   <script>
 
-  // function coder(str) {
-  //     var s = "";
-  //     if (str.length == 0) return "";
-  //     for (var i = 0; i < str.length; i++) {
-  //         switch (str.substr(i, 1)) {
-  //             case "<": s += "&lt;"; break;
-  //             case ">": s += "&gt;"; break;
-  //             case "&": s += "&amp;"; break;
-  //             case " ": s += "&nbsp;"; break;
-  //             case "\"": s += "&quot;"; break;
-  //             default: s += str.substr(i, 1); break;
-  //         }
-  //     }
-  //     return s;
-  // }
-  // var html = coder("{{ article['paragraphs'] }}");
-  // // alert(html);
-  //  $("#editor").html(html);
-
       // with plugin options
       $("#file1").fileinput({
           'showCaption': false, //是否显示标题
@@ -404,7 +385,6 @@
       // Create Form
       //----------------------------------------------
       // Validation
-
 
       $("#create-form").validate({
         rules: {
@@ -542,10 +522,11 @@
         s = s.replace(/&#39;/g, "\'");
         s = s.replace(/&quot;/g, "\"");
         s = s.replace(/<br>/g, "\n");
+        s = s.replace(/\\/g, "");
         return s;
       }
   var html = html_decode("{{ article['paragraphs'] }}");
-  // alert(html);
+  alert(html);
   $("#editor").html(html);
 
       $(document).ready(function() {
