@@ -522,11 +522,12 @@
         s = s.replace(/&#39;/g, "\'");
         s = s.replace(/&quot;/g, "\"");
         s = s.replace(/<br>/g, "\n");
+        s = s.replace(/&amp;/g, "&");
         s = s.replace(/\\/g, "");
         return s;
       }
   var html = html_decode("{{ article['paragraphs'] }}");
-  alert(html);
+  //   alert(html);
   $("#editor").html(html);
 
       $(document).ready(function() {
