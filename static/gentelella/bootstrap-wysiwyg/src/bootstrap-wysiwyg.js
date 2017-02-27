@@ -171,13 +171,17 @@
 
                             var imgFile = uploadUpyun(fileInfo, "file");
                             $('#loadingToast').show();
-                            console.log(imgFile);
+                            var times = 0;
                             document.addEventListener('uploaded', function(e) {
+                                console.log(e);
+                                if (times == 0) {
+                                  // FIXME 将图片展示在编辑框内
+                                  execCommand('insertimage', imgFile);
 
-                                execCommand('insertimage', imgFile);
-
-                                editor.trigger('image-inserted');
-                                $('#loadingToast').hide();
+                                  editor.trigger('image-inserted');
+                                  $('#loadingToast').hide();
+                                }
+                                times++;
                             });
 
                             // execCommand('insertimage', dataUrl);
