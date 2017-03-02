@@ -102,6 +102,7 @@ class AuthPhoneLoginHandler(BaseHandler):
 
             self.set_secure_cookie("access_token", session_ticket['access_token'])
             self.set_secure_cookie("expires_at", str(session_ticket['expires_at']))
+            self.set_secure_cookie("refresh_token", session_ticket['refresh_token'])
         except:
             err_title = str( sys.exc_info()[0] );
             err_detail = str( sys.exc_info()[1] );
