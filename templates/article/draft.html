@@ -111,13 +111,13 @@
                             {% for category in article['categories'] %}
                               {{ category['title'] }}&nbsp;
                             {% end %}
-                          </p>                          
+                          </p>
                           <p>{{ article['create_time'] }}</p>
                           <div class="divider"></div>
                           <p>
                             <a href="/ops/articles/edit?id={{ article['_id'] }}" class="btn ap_del btn-info btn-xs">
                               <i class="fa fa-pencil-o"></i> 编辑 </a>
-                            <a onclick="delete('{{ article['_id'] }}')" class="btn ap_del btn-danger btn-xs">
+                            <a onclick="dele('{{ article['_id'] }}')" class="btn ap_del btn-danger btn-xs">
                               <i class="fa fa-trash-o"></i> 删除 </a>
                             <a onclick="publish('{{ article['_id'] }}')" class="btn btn-success btn-xs">
                               <i class="fa fa-pencil"></i> 发布 </a>
@@ -179,6 +179,31 @@
         console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
         if (XMLHttpRequest.status == 200) {
           location.href = "/ops/articles/publish";
+        } else {
+          $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+        }
+      },
+      complete: function(XMLHttpRequest, textStatus) {
+        this; // 调用本次AJAX请求时传递的options参数
+      }
+    });
+  };
+
+  function dele(id){
+    console.log(id);
+
+    $.ajax({
+      type: "DELETE",
+      url: "/api/articles/"+id,
+      dataType: "json",
+      contentType: 'application/json',
+      success: function(data, status, xhr) {
+        location.href = "/ops/articles/draft";
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+        if (XMLHttpRequest.status == 200) {
+          location.href = "/ops/articles/draft";
         } else {
           $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
         }

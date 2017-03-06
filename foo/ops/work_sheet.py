@@ -145,6 +145,11 @@ class ArticlesPublishHandler(AuthorizationHandler):
         logging.info("got response %r", response.body)
         articles = json_decode(response.body)
 
+        # activity['beginTime'] = timestamp_datetime(long(activity['beginTime'] / 1000))
+
+        for article in articles:
+            article['publish_time'] = timestamp_datetime(long(article['publish_time']))
+
         ops = self.get_myinfo_basic()
 
         self.render('article/publish.html',

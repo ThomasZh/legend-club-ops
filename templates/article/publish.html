@@ -101,7 +101,7 @@
                         <div class="x_content">
                           <div class="thumbnail">
                             <div class="image view view-first">
-                              <a href="/ops/articles/edit?id={{ article['_id'] }}"">
+                              <a href="/ops/articles/edit?id={{ article['_id'] }}">
                                 <img style="width: 100%; display: block;" src="{{ article['img'] }}" alt="image" />
                               </a>
                             </div>
@@ -160,5 +160,11 @@
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
 
 </body>
+<script type="text/javascript">
 
+    function getLocalTime(nS) { //时间戳转换
+       return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+    };
+
+</script>
 </html>
