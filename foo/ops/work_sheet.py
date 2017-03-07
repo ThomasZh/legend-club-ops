@@ -213,6 +213,9 @@ class MomentsImagesHandler(AuthorizationHandler):
         logging.info("got response %r", response.body)
         multimedias = json_decode(response.body)
 
+        for multimedia in multimedias:
+            multimedia['publish_time'] = timestamp_datetime(long(multimedia['publish_time']))
+
         ops = self.get_myinfo_basic()
 
         self.render('moment/images.html',
@@ -233,6 +236,9 @@ class MomentsVideosHandler(AuthorizationHandler):
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
         multimedias = json_decode(response.body)
+
+        for multimedia in multimedias:
+            multimedia['publish_time'] = timestamp_datetime(long(multimedia['publish_time']))
 
         ops = self.get_myinfo_basic()
 
