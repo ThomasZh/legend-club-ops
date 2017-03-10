@@ -194,8 +194,14 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'" class="btn ap_del btn-danger btn-xs">';
-                inner_html += '<i class="fa fa-trash-o"></i> 删除 </a>';
+                  if (pageData[i]._status == 0){
+                    inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'" class="btn ap_del btn-info btn-xs">';
+                    inner_html += '<i class="fa"></i> 草稿箱 </a>';
+                  }
+                  else if(pageData[i]._status == 100){
+                    inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'" class="btn ap_del btn-success btn-xs">';
+                    inner_html += '<i class="fa"></i> 公开 </a>';
+                  }
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);
@@ -238,8 +244,14 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'" class="btn ap_del btn-danger btn-xs">';
-                inner_html += '<i class="fa fa-trash-o"></i> 删除 </a>';
+                if (pageData[i]._status == 0){
+                  inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'" class="btn ap_del btn-info btn-xs">';
+                  inner_html += '<i class="fa"></i> 草稿箱 </a>';
+                }
+                else if(pageData[i]._status == 100){
+                  inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'" class="btn ap_del btn-success btn-xs">';
+                  inner_html += '<i class="fa"></i> 公开 </a>';
+                }
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);

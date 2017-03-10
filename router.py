@@ -17,7 +17,7 @@ def map():
 
     config = [
 
-        (r'/', getattr(work_sheet, 'OpsIndexHandler')),
+        (r'/', getattr(work_sheet, 'ArticlesPublishHandler')),
 
         (r'/ops/auth/email/login', getattr(auth_email, 'AuthEmailLoginHandler')),
         (r'/ops/auth/email/register', getattr(auth_email, 'AuthEmailRegisterHandler')),
