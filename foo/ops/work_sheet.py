@@ -179,6 +179,30 @@ class ArticlesEditHandler(AuthorizationHandler):
                 article=article)
 
 
+class VendorEditHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        access_token = self.get_secure_cookie("access_token")
+
+        url = "http://api.7x24hs.com/api/clubs/"+CLUB_ID
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        club = json_decode(response.body)
+        if not club.has_key('img'):
+            club['img'] = ''
+
+        ops = self.get_myinfo_basic()
+
+        self.render('ops/ops-edit.html',
+                ops=ops,
+                club_id=CLUB_ID,
+                club=club,
+                access_token=access_token)
+
+
 class MomentsAllHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
