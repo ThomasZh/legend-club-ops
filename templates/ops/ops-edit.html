@@ -260,6 +260,11 @@
                   </div>
                 </div>
 
+                <div id="citySelect"  style="float:left;margin-left: 15px;">
+                     <select class="prov" id="province"></select>
+                     <select class="city" disabled="disabled" id="city"></select>
+                </div>
+
             </div>
 
           </div>
@@ -295,6 +300,8 @@
   <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
   <script src="{{ static_url('js/vue-2.1.4.js') }}" type="text/javascript"></script>
+  <script src="{{ static_url('js/city.min.js') }}" type="text/javascript"></script>
+  <script src="{{ static_url('js/jquery.cityselect.js') }}" type="text/javascript"></script>
   <!-- fileinput -->
   <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
   <script src="{{ static_url('upyun/js/spark-md5.min.js') }}"></script>
@@ -302,7 +309,6 @@
   <script src="{{ static_url('upyun/js/upyun-mu.js') }}"></script>
 
   <script>
-
       // with plugin options
       $("#file1").fileinput({
           'showCaption': false, //是否显示标题
@@ -557,6 +563,13 @@
       });
   </script>
   <!-- /bootstrap-wysiwyg -->
+  <script type="text/javascript">
+    $("#citySelect").citySelect({
+      url:"{{ static_url('js/city.min.js') }}",
+      nodata:"none",
+      required:false
+    });
+  </script>
 </body>
 
 </html>
