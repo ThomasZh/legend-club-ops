@@ -205,7 +205,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header("Cache-Control","no-store")
         self.set_header("Cache-Control","no-cache")
         self.set_header("expires","0")
-        
+
     def get_code(self):
         url = "http://api.7x24hs.com/api/auth/codes"
         http_client = HTTPClient()
@@ -256,6 +256,32 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
 class AuthorizationHandler(BaseHandler):
+    def get_ops_info(self):
+        access_token = self.get_secure_cookie("access_token")
+
+        try:
+            url = "http://api.7x24hs.com/api/myinfo-as-ops"
+            http_client = HTTPClient()
+            headers={"Authorization":"Bearer "+access_token}
+            response = http_client.fetch(url, method="GET", headers=headers)
+            logging.info("got response %r", response.body)
+            # account_id,nickname,avatar,club_id,club_name,league_id,_rank
+            ops = json_decode(response.body)
+            return ops
+        except:
+            err_title = str( sys.exc_info()[0] );
+            err_detail = str( sys.exc_info()[1] );
+            logging.error("error: %r info: %r", err_title, err_detail)
+            if err_detail == 'HTTP 404: Not Found':
+                err_msg = "您不是俱乐部的管理员!"
+                self.redirect("/ops/auth/phone/login")
+                return
+            else:
+                err_msg = "系统故障, 请稍后尝试!"
+                self.redirect("/ops/auth/phone/login")
+                return
+
+
     def get_current_user(self):
         self.set_secure_cookie("login_next", self.request.uri)
 

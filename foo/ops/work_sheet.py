@@ -46,7 +46,7 @@ class OpsIndexHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        ops = self.get_myinfo_basic()
+        ops = self.get_ops_info()
         self.render('ops/index.html',
                 ops=ops)
 
@@ -55,7 +55,7 @@ class ProfileEditHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        ops = self.get_myinfo_basic()
+        ops = self.get_ops_info()
         self.render('ops/profile-edit.html',
                 ops=ops)
 
@@ -82,11 +82,11 @@ class OperatorsHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
-        ops = self.get_myinfo_basic()
+        ops = self.get_ops_info()
 
         self.render('ops/operators.html',
                 ops=ops,
-                club_id=CLUB_ID)
+                club_id=ops['club_id'])
 
 
 class TodoListHandler(AuthorizationHandler):
@@ -94,11 +94,11 @@ class TodoListHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
-        ops = self.get_myinfo_basic()
+        ops = self.get_ops_info()
 
         self.render('ops/todo-list.html',
                 ops=ops,
-                club_id=CLUB_ID)
+                club_id=ops['club_id'])
 
 
 class ArticlesCreateHandler(AuthorizationHandler):
@@ -106,11 +106,11 @@ class ArticlesCreateHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
-        ops = self.get_myinfo_basic()
+        ops = self.get_ops_info()
 
         self.render('article/create.html',
                 ops=ops,
-                club_id=CLUB_ID)
+                club_id=ops['club_id'])
 
 
 class ArticlesDraftHandler(AuthorizationHandler):
@@ -118,18 +118,18 @@ class ArticlesDraftHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
-        params = {"filter":"club", "club_id":CLUB_ID, "status":"draft", "type":0}
+        ops = self.get_ops_info()
+
+        params = {"filter":"club", "club_id":ops['club_id'], "status":"draft", "type":0}
         url = url_concat("http://api.7x24hs.com/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
         articles = json_decode(response.body)
 
-        ops = self.get_myinfo_basic()
-
         self.render('article/draft.html',
                 ops=ops,
-                club_id=CLUB_ID,
+                club_id=ops['club_id'],
                 articles=articles)
 
 
@@ -138,7 +138,9 @@ class ArticlesPublishHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
-        params = {"filter":"club", "club_id":CLUB_ID, "status":"publish"}
+        ops = self.get_ops_info()
+
+        params = {"filter":"club", "club_id":ops['club_id'], "status":"publish"}
         url = url_concat("http://api.7x24hs.com/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
@@ -150,11 +152,9 @@ class ArticlesPublishHandler(AuthorizationHandler):
         for article in articles:
             article['publish_time'] = timestamp_datetime(long(article['publish_time']))
 
-        ops = self.get_myinfo_basic()
-
         self.render('article/publish.html',
                 ops=ops,
-                club_id=CLUB_ID,
+                club_id=ops['club_id'],
                 articles=articles)
 
 
@@ -171,11 +171,11 @@ class ArticlesEditHandler(AuthorizationHandler):
         logging.info("got response %r", response.body)
         article = json_decode(response.body)
 
-        ops = self.get_myinfo_basic()
+        ops = self.get_ops_info()
 
         self.render('article/edit.html',
                 ops=ops,
-                club_id=CLUB_ID,
+                club_id=ops['club_id'],
                 article=article)
 
 
@@ -185,8 +185,9 @@ class VendorEditHandler(AuthorizationHandler):
         logging.info(self.request)
 
         access_token = self.get_secure_cookie("access_token")
+        ops = self.get_ops_info()
 
-        url = "http://api.7x24hs.com/api/clubs/"+CLUB_ID
+        url = "http://api.7x24hs.com/api/clubs/"+ops['club_id']
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -194,11 +195,9 @@ class VendorEditHandler(AuthorizationHandler):
         if not club.has_key('img'):
             club['img'] = ''
 
-        ops = self.get_myinfo_basic()
-
         self.render('ops/ops-edit.html',
                 ops=ops,
-                club_id=CLUB_ID,
+                club_id=ops['club_id'],
                 club=club,
                 access_token=access_token)
 
@@ -208,19 +207,19 @@ class MomentsAllHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
+        ops = self.get_ops_info()
+
         # multimedia
-        params = {"filter":"club", "club_id":CLUB_ID, "idx":0, "limit":20}
+        params = {"filter":"club", "club_id":ops['club_id'], "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
         multimedias = json_decode(response.body)
 
-        ops = self.get_myinfo_basic()
-
         self.render('moment/all.html',
                 ops=ops,
-                club_id=CLUB_ID,
+                club_id=ops['club_id'],
                 multimedias=multimedias)
 
 
@@ -229,8 +228,10 @@ class MomentsImagesHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
+        ops = self.get_ops_info()
+
         # multimedia
-        params = {"filter":"club", "club_id":CLUB_ID, "idx":0, "limit":20}
+        params = {"filter":"club", "club_id":ops['club_id'], "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
@@ -240,11 +241,9 @@ class MomentsImagesHandler(AuthorizationHandler):
         for multimedia in multimedias:
             multimedia['publish_time'] = timestamp_datetime(long(multimedia['publish_time']))
 
-        ops = self.get_myinfo_basic()
-
         self.render('moment/images.html',
                 ops=ops,
-                club_id=CLUB_ID,
+                club_id=ops['club_id'],
                 multimedias=multimedias)
 
 
@@ -253,8 +252,10 @@ class MomentsVideosHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
+        ops = self.get_ops_info()
+
         # multimedia
-        params = {"filter":"club", "club_id":CLUB_ID, "idx":0, "limit":20}
+        params = {"filter":"club", "club_id":ops['club_id'], "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
@@ -264,9 +265,7 @@ class MomentsVideosHandler(AuthorizationHandler):
         for multimedia in multimedias:
             multimedia['publish_time'] = timestamp_datetime(long(multimedia['publish_time']))
 
-        ops = self.get_myinfo_basic()
-
         self.render('moment/videos.html',
                 ops=ops,
-                club_id=CLUB_ID,
+                club_id=ops['club_id'],
                 multimedias=multimedias)
