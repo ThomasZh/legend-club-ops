@@ -177,6 +177,7 @@
           function query(pageNum) {
             $.get("/api/multimedias-pagination?filter=club&club_id={{ club_id }}&page=1&limit="+limit+"",function(data,status){
                   console.log(data);
+                  data = JSON.parse(data);
                   currentPage = 1;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
@@ -221,6 +222,7 @@
           function gotoPage(pageNum) {
             $.get("/api/multimedias-pagination?filter=club&club_id={{ club_id }}&page="+pageNum+"&limit="+limit+"",function(data,status){
                   console.log(data);
+                  data = JSON.parse(data);
                   currentPage = pageNum;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
