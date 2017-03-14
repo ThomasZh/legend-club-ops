@@ -35,7 +35,12 @@
   <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
 
 </head>
-
+<style>
+  select{
+    width: 120px;
+    height: 30px;
+  }
+</style>
 <body class="nav-md">
   <div class="container body">
     <div class="main_container">
@@ -224,21 +229,33 @@
                       <form id="title-form" action="" method="" onsubmit="return false;" class="form-horizontal form-label-left">
 
                         <div class="form-group">
-                          <label class="col-md-8 col-sm-6 col-xs-12" for="title">俱乐部名称 <span class="required">*</span>
+                          <label class="col-md-8 col-sm-6 col-xs-12" for="title">加盟商名称 <span class="required">*</span>
                           </label>
                           <div class="col-md-12 col-sm-6 col-xs-12">
                             <input type="text" id="title" name="title" value="{{ club['name'] }}" class="form-control col-md-7 col-xs-12">
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">俱乐部简介 <span class="required">*</span>
+                          <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">加盟商简介 <span class="required">*</span>
                             </label>
                           <div class="col-md-12 col-sm-6 col-xs-12">
                             <textarea type="text" id="subtitle" rows=3 name="subtitle" class="form-control col-md-7 col-xs-12">{{ club['introduction'] }}</textarea>
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-md-8 col-sm-6 col-xs-12" for="img">俱乐部背景图片 <span class="required">*</span>
+                          <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">加盟商地址 <span class="required">*</span>
+                            </label>
+                          <div class="col-md-12 col-sm-6 col-xs-12">
+
+                              <div id="citySelect" style="margin-top:5px;">
+                                   <select class="prov" id="prov"></select>
+                                   <select class="city" disabled="disabled" id="city"></select>
+                              </div>
+
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-md-8 col-sm-6 col-xs-12" for="img">加盟商背景图片 <span class="required">*</span>
                             </label>
                           <div class="col-md-12 col-sm-6 col-xs-12">
                             <input type="file" id="file1" name="file" class="form-control col-md-7 col-xs-12">
@@ -258,11 +275,6 @@
 
                     </div>
                   </div>
-                </div>
-
-                <div id="citySelect"  style="float:left;margin-left: 15px;">
-                     <select class="prov" id="province"></select>
-                     <select class="city" disabled="disabled" id="city"></select>
                 </div>
 
             </div>
@@ -423,6 +435,7 @@
           });
         }
       });
+
       //修改title
       $("#title-form").validate({
         rules: {
@@ -438,15 +451,18 @@
         },
         errorClass: "form-invalid",
         submitHandler: function(form) {
-          console.log('create article');
-
+          console.log(prov);
           var title = $("#title").val();
           var subtitle = $("#subtitle").val();
+          var prov=$("#prov option:selected").text();
+          var city=$("#city option:selected").text();
           var img = $("#img").val();
           var data = {
             "name": title,
             "introduction": subtitle,
             "img": img,
+            "province":prov,
+            "city":city
           };
           var json = JSON.stringify(data);
           console.log(json);
@@ -477,6 +493,7 @@
       });
 
     });
+
   </script>
   <!-- bootstrap-wysiwyg -->
   <script>
@@ -567,8 +584,11 @@
     $("#citySelect").citySelect({
       url:"{{ static_url('js/city.min.js') }}",
       nodata:"none",
-      required:false
+      required:false,
+      prov:"{{ club['province'] }}",
+      city:"{{ club['city'] }}"
     });
+
   </script>
 </body>
 
