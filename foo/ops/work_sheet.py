@@ -194,6 +194,8 @@ class VendorEditHandler(AuthorizationHandler):
         club = json_decode(response.body)
         if not club.has_key('img'):
             club['img'] = ''
+        if not club.has_key('paragraphs'):
+            club['paragraphs'] = ''
 
         self.render('ops/ops-edit.html',
                 ops=ops,

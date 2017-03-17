@@ -13,25 +13,18 @@
   <title>{{ ops['club_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
-  <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}">
+
   <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
 
   <!-- Custom styling plus plugins -->
   <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
+  <!-- <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}"> -->
   <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
-  <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
-
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
-
-  <!-- fileinput -->
-  <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
-  <script src="{{ static_url('upyun/js/spark-md5.min.js') }}"></script>
-  <script src="{{ static_url('upyun/js/async.js') }}"></script>
-  <script src="{{ static_url('upyun/js/upyun-mu.js') }}"></script>
-
+  <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
 </head>
 
 <body class="nav-md">
@@ -81,7 +74,27 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-
+                    <!-- uploading toast -->
+                    <div id="loadingToast" class="weui_loading_toast" style="display:none;">
+                        <div class="weui_mask_transparent"></div>
+                        <div class="weui_toast">
+                            <div class="weui_loading">
+                                <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+                                <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+                            </div>
+                            <p class="weui_toast_content">图片上传中...</p>
+                        </div>
+                    </div>
                     <form class="form-horizontal form-label-left" enctype="multipart/form-data" action="/ops/profile/edit" method="POST">
 
                       <div class="form-group">
@@ -139,7 +152,13 @@
   <script src="{{ static_url('gentelella/pace/pace.min.js') }}"></script>
   <!-- alert Scripts -->
   <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
+  <!-- fileinput -->
+  <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
+  <script src="{{ static_url('upyun/js/spark-md5.min.js') }}"></script>
+  <script src="{{ static_url('upyun/js/async.js') }}"></script>
+  <script src="{{ static_url('upyun/js/upyun-mu.js') }}"></script>
 
+  <script src="{{ static_url('weui/js/weui.js') }}"></script>
   <script>
     // with plugin options
     $("#file").fileinput({
@@ -156,9 +175,13 @@
       var file = document.getElementById('file').files[0];
       //alert(file.name);
       var imgUrl = uploadUpyun(file, 'file');
-      // alert(imgUrl)
+      $('#loadingToast').show();
       document.getElementById("avatar").value = imgUrl;
-    }
+    };
+    document.addEventListener('uploaded',function(e) {
+      //alert('uploaded');
+      $('#loadingToast').hide();
+    });
 
     function uuid() {
       var s = [];
@@ -200,50 +223,8 @@
       instance.upload(filename);
 
       return 'https://tripc2c-club-title.b0.upaiyun.com' + filename;
-    }
+    };
 
-    //initialize the validator function
-
-    validator.message['date'] = 'not a real date';
-
-    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
-    $('form')
-      .on('blur', 'input[required], input.optional, select.required', validator.checkField)
-      .on('change', 'select.required', validator.checkField)
-      .on('keypress', 'input[required][pattern]', validator.keypress);
-
-    $('.multi.required')
-      .on('keyup blur', 'input', function() {
-        validator.checkField.apply($(this).siblings().last()[0]);
-      });
-
-    // bind the validation to the form submit event
-    //$('#send').click('submit');//.prop('disabled', true);
-
-    $('form').submit(function(e) {
-      e.preventDefault();
-      var submit = true;
-      // evaluate the form using generic validaing
-      if (!validator.checkAll($(this))) {
-        submit = false;
-      }
-
-      if (submit) {
-        this.submit();
-      }
-      return false;
-    });
-
-    /* FOR DEMO ONLY */
-    $('#vfields').change(function() {
-      $('form').toggleClass('mode2');
-    }).prop('checked', false);
-
-    $('#alerts').change(function() {
-      validator.defaults.alerts = (this.checked) ? false : true;
-      if (this.checked)
-        $('form .alert').remove();
-    }).prop('checked', false);
   </script>
 
 </body>
