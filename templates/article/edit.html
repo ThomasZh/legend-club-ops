@@ -13,8 +13,7 @@
   <title>{{ ops['club_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
-  <!-- <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}"> -->
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
   <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
@@ -27,8 +26,6 @@
   <!-- bootstrap-wysiwyg -->
   <link href="{{ static_url('gentelella/google-code-prettify/bin/prettify.min.css') }}" rel="stylesheet">
   <!-- Custom Theme Style -->
-
-  <link rel="stylesheet" href="{{ static_url('css/weui.min.css') }}">
 
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
@@ -331,6 +328,7 @@
   <!-- alert Scripts -->
   <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
   <script type="text/javascript" src="{{ static_url('js/jquery.cityselect.js') }}"></script>
+  <script src="{{ static_url('weui/js/weui.js') }}"></script>
   <!-- fileinput -->
   <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
   <script src="{{ static_url('upyun/js/spark-md5.min.js') }}"></script>
@@ -436,7 +434,8 @@
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              location.href = "/ops/articles/draft";
+              weui.alert("保存成功！","提示信息",function(){
+        			});
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -487,7 +486,9 @@
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              location.href = "/ops/articles/draft";
+              weui.alert("保存成功！","提示信息",function(){
+        			});
+
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -516,10 +517,11 @@
     created: function() {
       this.queryCategories();
     },
+
     methods: {
       saveCategories: function() {
         var _self = this;
-        console.log(this.categories);
+        console.log(_self.categories);
         var category_ids = new Array();
         for (var i=0;i<this.categories.length;i++) {
           if (this.categories[i].select) {
@@ -538,9 +540,9 @@
           dataType: "json",
           contentType: 'application/json',
           success: function(data, status, xhr) {
-            console.log(data);
-            _self.categories = data;
-            // alert("保存分类成功！")
+            console.log("saveCategories:"+data);
+            _self.queryCategories();
+            weui.alert("保存成功！","提示信息");
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -553,14 +555,14 @@
       },
       queryCategories: function() {
         var _self = this;
-
+        var randomWord = Math.random().toString(36).substr(2);
         $.ajax({
           type: "GET",
-          url: "/api/articles/{{ article['_id'] }}/categories",
+          url: "/api/articles/{{ article['_id'] }}/categories?random="+ randomWord +"",
           dataType: "json",
           contentType: 'application/json',
           success: function(data, status, xhr) {
-            console.log(data);
+            console.log("queryCategories:"+data);
             _self.categories = data;
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {

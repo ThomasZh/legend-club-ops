@@ -28,16 +28,6 @@
   <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
   <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" />
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
-
-  <!--[if lt IE 9]>
-        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
-        <![endif]-->
-
-  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
 
 </head>
@@ -111,7 +101,8 @@
                         </thead>
 
                         <tbody>
-                          <tr class="even pointer" is="oneAdmin" v-for="(admin,idx) in admins" v-bind:admin="admin" v-bind:idx="idx"></tr>
+                          <tr class="even pointer" v-if="ops_rank>0" is="oneAdmin" v-for="(admin,idx) in admins" v-bind:admin="admin" v-bind:idx="idx"></tr>
+                          <tr class="even pointer" v-if="ops_rank==0 && admin._rank==0" is="oneAdmin" v-for="(admin,idx) in admins" v-bind:admin="admin" v-bind:idx="idx"></tr>
                         </tbody>
                       </table>
                     </div>
@@ -293,14 +284,17 @@
         admins: [],
         admins_num: 0,
         users: [],
+        ops_rank: {{ ops['_rank'] }},
         phone: '',
       },
       created: function() {
         this.queryAdmins(0, 20);
+
       },
       methods: {
         queryAdmins: function(idx, limit) {
           var _self = this;
+          console.log(this.ops_rank);
 
           $.ajax({
             type: "GET",
@@ -346,7 +340,5 @@
   </script>
 
 </body>
-
-</html>
 
 </html>

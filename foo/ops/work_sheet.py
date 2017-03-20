@@ -74,7 +74,7 @@ class ProfileEditHandler(AuthorizationHandler):
         response = http_client.fetch(url, method="PUT", headers=headers, body=_json)
         logging.info("got response.body %r", response.body)
 
-        self.redirect("/")
+        self.redirect("/ops/profile/edit")
 
 
 class OperatorsHandler(AuthorizationHandler):
@@ -83,6 +83,7 @@ class OperatorsHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
+        logging.info("ops>>>> %r",ops)
 
         self.render('ops/operators.html',
                 ops=ops,
