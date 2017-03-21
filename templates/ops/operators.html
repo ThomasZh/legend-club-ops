@@ -242,7 +242,10 @@
           <td class="a-center "><input type="checkbox" class="flat" name="table_records"></td>\
           <td class=" "><img :src="user.avatar" class="avatar" alt="avatar"></td>\
           <td class=" ">{{! user.nickname }}</td>\
-          <td class="last"><a v-on:click="promoteToAdmin" type="button" class="btn btn-round btn-sm btn-success">添加</a></td>\
+          <td class="last">\
+          <a v-if="user.ops_club_id" type="button" class="btn btn-round btn-sm btn-info">已经是加盟商管理员</a>\
+          <a v-else v-on:click="promoteToAdmin" type="button" class="btn btn-round btn-sm btn-success">添加</a>\
+          </td>\
         </tr>',
       props: ['user', 'idx'],
       methods: {
