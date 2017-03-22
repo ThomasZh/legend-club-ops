@@ -439,11 +439,8 @@
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-              if (XMLHttpRequest.status == 200) {
-                location.href = "/ops/articles/draft";
-              } else {
-                $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-              }
+              $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+
             },
             complete: function(XMLHttpRequest, textStatus) {
               this; // 调用本次AJAX请求时传递的options参数
@@ -599,6 +596,7 @@
 
       $(document).ready(function() {
         // alert("{{ article['paragraphs'] }}");
+        alert($("img"))
 
           function initToolbarBootstrapBindings() {
               var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',

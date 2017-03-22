@@ -13,13 +13,11 @@
     <title>{{ ops['club_name'] }}</title>
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
-    <!-- <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}"> -->
+    <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
     <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
 
-    <!-- <link href="{{ static_url('css/custom.css') }}" rel="stylesheet"> -->
     <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
     <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
 
@@ -27,11 +25,7 @@
     <link href="{{ static_url('gentelella/google-code-prettify/bin/prettify.min.css') }}" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ static_url('css/weui.min.css') }}">
-
-    <!-- Custom styling plus plugins -->
-    <!-- <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
-  <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" /> -->
+    <link href="{{ static_url('css/self.css') }}" rel="stylesheet">
     <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
     <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
 
@@ -268,6 +262,7 @@
     <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
     <!-- alert Scripts -->
     <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
+    <script src="{{ static_url('weui/js/weui.js') }}"></script>
 
     <!-- fileinput -->
     <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
@@ -362,7 +357,12 @@
                         required: true,
                     },
                 },
-                errorClass: "form-invalid",
+                messages:{
+                  title:"请填写文章标题！",
+                  subtitle:"请填写文章副标题！",
+                  editor:"请填写文章正文",
+                },
+                errorClass: "error",
                 submitHandler: function(form) {
                     console.log('create article');
 
@@ -386,15 +386,15 @@
                         dataType: "json",
                         contentType: 'application/json',
                         success: function(data, status, xhr) {
+                          weui.alert("创建成功","消息提示",function(){
                             location.href = "/ops/articles/draft";
+                          });
+
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
                             console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-                            if (XMLHttpRequest.status == 200) {
-                                location.href = "/ops/articles/draft";
-                            } else {
-                                $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-                            }
+                                $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+
                         },
                         complete: function(XMLHttpRequest, textStatus) {
                             this; // 调用本次AJAX请求时传递的options参数

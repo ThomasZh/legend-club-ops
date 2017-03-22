@@ -13,8 +13,7 @@
   <title>{{ ops['club_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
-  <!-- <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}"> -->
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
   <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
@@ -119,12 +118,23 @@
   <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
   <!-- alert Scripts -->
   <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
+  <script src="{{ static_url('weui/js/weui.js') }}"></script>
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
   <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
   <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
 
   <script>
+  function confirms(id,fun,mess){
+    weui.confirm(mess,"提示信息",function(r){
+      if(r == true){
+        fun(id);
+      }else{
+
+      }
+    })
+
+  };
   function publish(id){
     console.log(id);
 
@@ -134,15 +144,11 @@
       dataType: "json",
       contentType: 'application/json',
       success: function(data, status, xhr) {
-        location.href = "/ops/articles/publish";
+          location.href = "/ops/articles/publish";
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-        if (XMLHttpRequest.status == 200) {
-          location.href = "/ops/articles/publish";
-        } else {
-          $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-        }
+        $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
       },
       complete: function(XMLHttpRequest, textStatus) {
         this; // 调用本次AJAX请求时传递的options参数
@@ -163,11 +169,7 @@
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-        if (XMLHttpRequest.status == 200) {
-          location.href = "/ops/articles/draft";
-        } else {
-          $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-        }
+          $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
       },
       complete: function(XMLHttpRequest, textStatus) {
         this; // 调用本次AJAX请求时传递的options参数
@@ -212,10 +214,12 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a onclick="publish(\''+pageData[i]._id+'\')" class="btn ap_del btn-success btn-xs">';
-                inner_html += '<i class="fa  fa-check-circle"></i> 发布 </a>';
+                inner_html += '<a onclick="confirms(\''+pageData[i]._id+'\',dele,\'确定删除吗？\')" class="btn ap_del btn-danger btn-xs">';
+                inner_html += '<i class="fa fa-trash-o"></i> 删除 </a>';
                 inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'" class="btn ap_del btn-info btn-xs">';
-                inner_html += '<i class="fa  fa-pencil-square-o"></i> 编辑 </a>';
+                inner_html += '<i class="fa fa-pencil-square-o"></i> 编辑 </a>';
+                inner_html += '<a onclick="confirms(\''+pageData[i]._id+'\',publish,\'确定发布吗？\')" class="btn ap_del btn-success btn-xs">';
+                inner_html += '<i class="fa fa-check-circle"></i> 发布 </a>';
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);
@@ -264,10 +268,12 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a onclick="publish(\''+pageData[i]._id+'\')" class="btn ap_del btn-success btn-xs">';
-                inner_html += '<i class="fa fa-check-circle"></i> 发布 </a>';
+                inner_html += '<a onclick="confirms(\''+pageData[i]._id+'\',dele,\'确定删除吗？\')" class="btn ap_del btn-danger btn-xs">';
+                inner_html += '<i class="fa fa-trash-o"></i> 删除 </a>';
                 inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'" class="btn ap_del btn-info btn-xs">';
                 inner_html += '<i class="fa fa-pencil-square-o"></i> 编辑 </a>';
+                inner_html += '<a onclick="confirms(\''+pageData[i]._id+'\',publish,\'确定发布吗？\')" class="btn ap_del btn-success btn-xs">';
+                inner_html += '<i class="fa fa-check-circle"></i> 发布 </a>';
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);

@@ -233,21 +233,9 @@ class MomentsImagesHandler(AuthorizationHandler):
 
         ops = self.get_ops_info()
 
-        # multimedia
-        params = {"filter":"club", "club_id":ops['club_id'], "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        multimedias = json_decode(response.body)
-
-        for multimedia in multimedias:
-            multimedia['publish_time'] = timestamp_datetime(long(multimedia['publish_time']))
-
         self.render('moment/images.html',
                 ops=ops,
-                club_id=ops['club_id'],
-                multimedias=multimedias)
+                club_id=ops['club_id'])
 
 
 class MomentsVideosHandler(AuthorizationHandler):

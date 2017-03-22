@@ -82,14 +82,6 @@ class AuthPhoneLoginHandler(BaseHandler):
                 logging.info("got response %r", response.body)
                 # account_id,nickname,avatar,club_id,club_name,league_id,_rank
                 ops = json_decode(response.body)
-
-                # 添加此帐号到俱乐部的普通用户帐号表中
-                url = "http://api.7x24hs.com/api/clubs/"+CLUB_ID+"/signup"
-                http_client = HTTPClient()
-                _json = json_encode({"role":"ops"})
-                headers={"Authorization":"Bearer "+session_ticket['access_token']}
-                response = http_client.fetch(url, method="POST", headers=headers, body=_json)
-                logging.info("got response %r", response.body)
             except:
                 err_title = str( sys.exc_info()[0] );
                 err_detail = str( sys.exc_info()[1] );
