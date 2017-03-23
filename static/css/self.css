@@ -35,3 +35,7 @@ textarea::-webkit-input-placeholder {
 .show{
   color:#39e6ac;
 }
+.wysiwyg-img{
+  max-width: 80%;
+  height: auto;
+}

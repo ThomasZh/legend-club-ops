@@ -130,7 +130,6 @@
       if(r == true){
         fun(id);
       }else{
-
       }
     })
 
@@ -144,6 +143,7 @@
       dataType: "json",
       contentType: 'application/json',
       success: function(data, status, xhr) {
+          weui.Loading.success();
           location.href = "/ops/articles/publish";
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -165,6 +165,7 @@
       dataType: "json",
       contentType: 'application/json',
       success: function(data, status, xhr) {
+        weui.Loading.success();
         location.href = "/ops/articles/draft";
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {

@@ -26,7 +26,8 @@
   <!-- bootstrap-wysiwyg -->
   <link href="{{ static_url('gentelella/google-code-prettify/bin/prettify.min.css') }}" rel="stylesheet">
   <!-- Custom Theme Style -->
-
+  <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
+  <link href="{{ static_url('css/self.css') }}" rel="stylesheet">
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
   <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
@@ -417,8 +418,6 @@
         },
         errorClass: "form-invalid",
         submitHandler: function(form) {
-          console.log('create article');
-
           var paragraphs = $("#editor").html();
           console.log(paragraphs);
           var data = {
@@ -434,13 +433,11 @@
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              weui.alert("保存成功！","提示信息",function(){
-        			});
+                weui.Loading.success();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
               $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-
             },
             complete: function(XMLHttpRequest, textStatus) {
               this; // 调用本次AJAX请求时传递的options参数
@@ -483,17 +480,11 @@
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              weui.alert("保存成功！","提示信息",function(){
-        			});
-
+              weui.Loading.success();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-              if (XMLHttpRequest.status == 200) {
-                location.href = "/ops/articles/draft";
-              } else {
                 $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-              }
             },
             complete: function(XMLHttpRequest, textStatus) {
               this; // 调用本次AJAX请求时传递的options参数
@@ -539,7 +530,7 @@
           success: function(data, status, xhr) {
             console.log("saveCategories:"+data);
             _self.queryCategories();
-            weui.alert("保存成功！","提示信息");
+            weui.Loading.success();
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -591,11 +582,11 @@
         return s;
       }
   var html = html_decode("{{ article['paragraphs'] }}");
-  //   alert(html);
-  $("#editor").html(html);
+  var html1 = html.replace(/(img)/g,"img class='wysiwyg-img'");
+  $("#editor").html(html1);
 
       $(document).ready(function() {
-        // alert("{{ article['paragraphs'] }}");
+
           function initToolbarBootstrapBindings() {
               var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
                       'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',

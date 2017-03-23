@@ -78,7 +78,7 @@
                 <div class="col-md-8 col-sm-8 col-xs-12">
                   <div class="x_panel">
                     <div class="x_title">
-                      <h2>加盟商详细介绍</h2>
+                      <h2>加盟商信息</h2>
                       <ul class="nav navbar-right panel_toolbox">
                       </ul>
                       <div class="clearfix"></div>
@@ -506,8 +506,8 @@
         return s;
       }
   var html = html_decode("{{ club['paragraphs'] }}");
-  //   alert(html);
-  $("#editor").html(html);
+  var html1 = html.replace(/(img)/g,"img class='wysiwyg-img'");
+  $("#editor").html(html1);
 
       $(document).ready(function() {
 

@@ -177,9 +177,9 @@
                                 if (times == 0) {
                                   // FIXME 将图片展示在编辑框内
                                   execCommand('insertimage', imgFile);
-
                                   editor.trigger('image-inserted');
                                   $('#loadingToast').hide();
+                                  var imgs = $("#editor").find("img").addClass("wysiwyg-img");
                                 }
                                 times++;
                             });
