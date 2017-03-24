@@ -133,7 +133,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/multimedias-pagination?filter=club&club_id={{ club_id }}&page=1&limit="+limit+"",function(data,status){
+            $.get("{{api_domain}}/api/multimedias-pagination?filter=club&club_id={{ club_id }}&page=1&limit="+limit+"",function(data,status){
                    console.log(data);
                   data = JSON.parse(data);
                   currentPage = 1;
@@ -179,7 +179,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/multimedias-pagination?filter=club&club_id={{ club_id }}&page="+pageNum+"&limit="+limit+"",function(data,status){
+            $.get("{{api_domain}}/api/multimedias-pagination?filter=club&club_id={{ club_id }}&page="+pageNum+"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;

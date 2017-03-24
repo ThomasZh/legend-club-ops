@@ -187,7 +187,7 @@
 
           $.ajax({
             type: "PUT",
-            url: "/api/leagues/{{ league_id }}/franchises/" + _self.franchise._id,
+            url: "{{api_domain}}/api/leagues/{{ league_id }}/franchises/" + _self.franchise._id,
             dataType: "json",
             data: json,
             contentType: 'application/json',
@@ -214,7 +214,7 @@
 
           $.ajax({
             type: "PUT",
-            url: "/api/leagues/{{ league_id }}/franchises/" + _self.franchise._id,
+            url: "{{api_domain}}/api/leagues/{{ league_id }}/franchises/" + _self.franchise._id,
             dataType: "json",
             data: json,
             contentType: 'application/json',
@@ -250,7 +250,7 @@
 
           $.ajax({
             type: "GET",
-            url: "/api/leagues/{{ league_id }}/franchises?filter=league&idx=" + idx + "&limit=" + limit,
+            url: "{{api_domain}}/api/leagues/{{ league_id }}/franchises?filter=league&idx=" + idx + "&limit=" + limit,
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {

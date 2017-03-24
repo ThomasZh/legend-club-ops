@@ -57,7 +57,12 @@ class ProfileEditHandler(AuthorizationHandler):
         logging.info(self.request)
         ops = self.get_ops_info()
         self.render('ops/profile-edit.html',
-                ops=ops)
+                ops=ops,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
 
     @tornado.web.authenticated  # if no session, redirect to login page
     def post(self):
@@ -87,7 +92,9 @@ class OperatorsHandler(AuthorizationHandler):
 
         self.render('ops/operators.html',
                 ops=ops,
-                club_id=ops['club_id'])
+                club_id=ops['club_id'],
+                access_token=access_token,
+                api_domain=API_DOMAIN)
 
 
 class TodoListHandler(AuthorizationHandler):
@@ -99,7 +106,8 @@ class TodoListHandler(AuthorizationHandler):
 
         self.render('ops/todo-list.html',
                 ops=ops,
-                club_id=ops['club_id'])
+                club_id=ops['club_id'],
+                api_domain=API_DOMAIN)
 
 
 class ArticlesCreateHandler(AuthorizationHandler):
@@ -111,7 +119,12 @@ class ArticlesCreateHandler(AuthorizationHandler):
 
         self.render('article/create.html',
                 ops=ops,
-                club_id=ops['club_id'])
+                club_id=ops['club_id'],
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
 
 
 class ArticlesDraftHandler(AuthorizationHandler):
@@ -131,7 +144,8 @@ class ArticlesDraftHandler(AuthorizationHandler):
         self.render('article/draft.html',
                 ops=ops,
                 club_id=ops['club_id'],
-                articles=articles)
+                articles=articles,
+                api_domain=API_DOMAIN)
 
 
 class ArticlesPublishHandler(AuthorizationHandler):
@@ -156,7 +170,8 @@ class ArticlesPublishHandler(AuthorizationHandler):
         self.render('article/publish.html',
                 ops=ops,
                 club_id=ops['club_id'],
-                articles=articles)
+                articles=articles,
+                api_domain=API_DOMAIN)
 
 
 class ArticlesEditHandler(AuthorizationHandler):
@@ -177,7 +192,12 @@ class ArticlesEditHandler(AuthorizationHandler):
         self.render('article/edit.html',
                 ops=ops,
                 club_id=ops['club_id'],
-                article=article)
+                article=article,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
 
 
 class VendorEditHandler(AuthorizationHandler):
@@ -202,7 +222,12 @@ class VendorEditHandler(AuthorizationHandler):
                 ops=ops,
                 club_id=ops['club_id'],
                 club=club,
-                access_token=access_token)
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
 
 
 class MomentsAllHandler(AuthorizationHandler):
@@ -223,7 +248,8 @@ class MomentsAllHandler(AuthorizationHandler):
         self.render('moment/all.html',
                 ops=ops,
                 club_id=ops['club_id'],
-                multimedias=multimedias)
+                multimedias=multimedias,
+                api_domain=API_DOMAIN)
 
 
 class MomentsImagesHandler(AuthorizationHandler):
@@ -235,7 +261,8 @@ class MomentsImagesHandler(AuthorizationHandler):
 
         self.render('moment/images.html',
                 ops=ops,
-                club_id=ops['club_id'])
+                club_id=ops['club_id'],
+                api_domain=API_DOMAIN)
 
 
 class MomentsVideosHandler(AuthorizationHandler):
@@ -259,4 +286,5 @@ class MomentsVideosHandler(AuthorizationHandler):
         self.render('moment/videos.html',
                 ops=ops,
                 club_id=ops['club_id'],
-                multimedias=multimedias)
+                multimedias=multimedias,
+                api_domain=API_DOMAIN)

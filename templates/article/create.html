@@ -312,16 +312,16 @@
 
             var config = {
                 // 空间名称
-                bucket: 'tripc2c-club-title',
+                bucket: '{{upyun_bucket}}',
                 // 上传请求过期时间
                 expiration: parseInt((new Date().getTime() + 3600000) / 1000),
                 // 尽量不要使用直接传表单 API 的方式，以防泄露造成安全隐患
-                form_api_secret: 'CRKAOsKHGbbCnU+yztBxUT0bYR0='
+                form_api_secret: '{{upyun_form_api_secret}}'
             };
 
             var instance = new Sand(config);
             var options = {
-                'notify_url': 'http://upyun.com'
+                'notify_url': '{{upyun_notify_url}}'
             };
             instance.setOptions(options);
             instance.setElementId(elementId);
@@ -333,7 +333,7 @@
             instance.upload(filename);
 
 
-            return 'https://tripc2c-club-title.b0.upaiyun.com' + filename;
+            return '{{upyun_domain}}' + filename;
         }
     </script>
 
@@ -381,7 +381,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/api/articles",
+                        url: "{{ api_domain }}/api/articles",
                         data: json,
                         dataType: "json",
                         contentType: 'application/json',
@@ -468,7 +468,7 @@
             window.prettyPrint;
             prettyPrint();
         });
-        
+
     </script>
     <!-- /bootstrap-wysiwyg -->
 
