@@ -58,7 +58,7 @@ class AuthPhoneLoginHandler(BaseHandler):
 
         # login
         try:
-            url = "http://api.7x24hs.com/api/auth/tokens"
+            url = API_DOMAIN+"/api/auth/tokens"
             http_client = HTTPClient()
             headers={"Authorization":"Bearer "+code}
             data = {"action":"login",
@@ -75,7 +75,7 @@ class AuthPhoneLoginHandler(BaseHandler):
             try:
                 # 校验是否为俱乐部管理员
                 params = {"filter":"ops"}
-                url = url_concat("http://api.7x24hs.com/api/myinfo", params)
+                url = url_concat(API_DOMAIN+"/api/myinfo", params)
                 http_client = HTTPClient()
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
                 response = http_client.fetch(url, method="GET", headers=headers)
@@ -130,7 +130,7 @@ class AuthPhoneRegisterHandler(BaseHandler):
 
         # register
         try:
-            url = "http://api.7x24hs.com/api/auth/accounts"
+            url = API_DOMAIN+"/api/auth/accounts"
             http_client = HTTPClient()
             headers={"Authorization":"Bearer "+code}
             data = {"login_type":"phone",
@@ -170,7 +170,7 @@ class AuthPhoneLostPwdHandler(BaseHandler):
         code = self.get_code()
 
         try:
-            url = "http://api.7x24hs.com/api/auth/pwds"
+            url = API_DOMAIN+"/api/auth/pwds"
             http_client = HTTPClient()
             headers={"Authorization":"Bearer "+code}
             data = {"login_type":"phone",
@@ -217,7 +217,7 @@ class AuthPhoneVerifyCodeHandler(BaseHandler):
         code = self.get_code()
 
         try:
-            url = "http://api.7x24hs.com/api/auth/verify-codes"
+            url = API_DOMAIN+"/api/auth/verify-codes"
             http_client = HTTPClient()
             headers={"Authorization":"Bearer "+code}
             data = {"action":"lost-pwd",

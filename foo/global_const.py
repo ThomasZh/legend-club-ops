@@ -16,10 +16,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-
-API_HOST = "127.0.0.1"
-API_PORT = "8009"
-
 TOKEN_EXPIRES_IN = 7200 # 2hours
 
 UPYUN_DOMAIN = "https://tripc2c-club-title.b0.upaiyun.com"

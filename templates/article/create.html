@@ -385,6 +385,7 @@
                         data: json,
                         dataType: "json",
                         contentType: 'application/json',
+                        headers: {"Authorization":"Bearer {{access_token}}"},
                         success: function(data, status, xhr) {
                           weui.alert("创建成功","消息提示",function(){
                             location.href = "/ops/articles/draft";

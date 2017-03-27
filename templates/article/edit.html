@@ -432,6 +432,7 @@
             data: json,
             dataType: "json",
             contentType: 'application/json',
+            headers: {"Authorization":"Bearer {{access_token}}"},
             success: function(data, status, xhr) {
                 weui.Loading.success();
             },
@@ -478,6 +479,7 @@
             url: "{{api_domain}}/api/articles/{{ article['_id'] }}",
             data: json,
             dataType: "json",
+            headers: {"Authorization":"Bearer {{access_token}}"},
             contentType: 'application/json',
             success: function(data, status, xhr) {
               weui.Loading.success();
@@ -526,6 +528,7 @@
           url: "{{api_domain}}/api/articles/{{ article['_id'] }}/categories?random="+ randomWord +"",
           data: json,
           dataType: "json",
+          headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
             console.log("saveCategories:"+data);
@@ -548,6 +551,7 @@
           type: "GET",
           url: "{{api_domain}}/api/articles/{{ article['_id'] }}/categories?random="+ randomWord +"",
           dataType: "json",
+          headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
             console.log("queryCategories:"+data);

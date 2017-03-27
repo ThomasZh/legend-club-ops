@@ -141,6 +141,7 @@
       type: "POST",
       url: "{{api_domain}}/api/articles/"+id+"/publish",
       dataType: "json",
+      headers: {"Authorization":"Bearer {{access_token}}"},
       contentType: 'application/json',
       success: function(data, status, xhr) {
           weui.Loading.success();
@@ -163,6 +164,7 @@
       type: "DELETE",
       url: "{{api_domain}}/api/articles/"+id,
       dataType: "json",
+      headers: {"Authorization":"Bearer {{access_token}}"},
       contentType: 'application/json',
       success: function(data, status, xhr) {
         weui.Loading.success();

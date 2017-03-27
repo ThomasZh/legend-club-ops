@@ -55,9 +55,11 @@ class ProfileEditHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
         self.render('ops/profile-edit.html',
                 ops=ops,
+                access_token=access_token,
                 api_domain=API_DOMAIN,
                 upyun_domain=UPYUN_DOMAIN,
                 upyun_notify_url=UPYUN_NOTIFY_URL,
@@ -72,7 +74,7 @@ class ProfileEditHandler(AuthorizationHandler):
         avatar = self.get_argument("avatar", "")
         logging.info("try update myinfo nickname:[%r] avatar:[%r]", nickname, avatar)
 
-        url = "http://api.7x24hs.com/api/myinfo"
+        url = API_DOMAIN+"/api/myinfo"
         http_client = HTTPClient()
         headers = {"Authorization":"Bearer "+access_token}
         _json = json_encode({"nickname":nickname, "avatar":avatar})
@@ -114,12 +116,13 @@ class ArticlesCreateHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
+        access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
 
         self.render('article/create.html',
                 ops=ops,
                 club_id=ops['club_id'],
+                access_token=access_token,
                 api_domain=API_DOMAIN,
                 upyun_domain=UPYUN_DOMAIN,
                 upyun_notify_url=UPYUN_NOTIFY_URL,
@@ -131,11 +134,11 @@ class ArticlesDraftHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
+        access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
 
         params = {"filter":"club", "club_id":ops['club_id'], "status":"draft", "type":0}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        url = url_concat(API_DOMAIN+"/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -143,6 +146,7 @@ class ArticlesDraftHandler(AuthorizationHandler):
 
         self.render('article/draft.html',
                 ops=ops,
+                access_token=access_token,
                 club_id=ops['club_id'],
                 articles=articles,
                 api_domain=API_DOMAIN)
@@ -156,7 +160,7 @@ class ArticlesPublishHandler(AuthorizationHandler):
         ops = self.get_ops_info()
 
         params = {"filter":"club", "club_id":ops['club_id'], "status":"publish"}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        url = url_concat(API_DOMAIN+"/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -178,10 +182,11 @@ class ArticlesEditHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
         article_id = self.get_argument("id", "")
         logging.info("get article_id=[%r] from argument", article_id)
 
-        url = "http://api.7x24hs.com/api/articles/"+article_id
+        url = API_DOMAIN+"/api/articles/"+article_id
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -192,6 +197,7 @@ class ArticlesEditHandler(AuthorizationHandler):
         self.render('article/edit.html',
                 ops=ops,
                 club_id=ops['club_id'],
+                access_token=access_token,
                 article=article,
                 api_domain=API_DOMAIN,
                 upyun_domain=UPYUN_DOMAIN,
@@ -204,11 +210,10 @@ class VendorEditHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
 
-        url = "http://api.7x24hs.com/api/clubs/"+ops['club_id']
+        url = API_DOMAIN+"/api/clubs/"+ops['club_id']
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -239,7 +244,7 @@ class MomentsAllHandler(AuthorizationHandler):
 
         # multimedia
         params = {"filter":"club", "club_id":ops['club_id'], "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        url = url_concat(API_DOMAIN+"/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -274,7 +279,7 @@ class MomentsVideosHandler(AuthorizationHandler):
 
         # multimedia
         params = {"filter":"club", "club_id":ops['club_id'], "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        url = url_concat(API_DOMAIN+"/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
