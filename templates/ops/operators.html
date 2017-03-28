@@ -316,9 +316,9 @@
             contentType: 'application/json',
             headers: {"Authorization":"Bearer {{access_token}}"},
             success: function(data, status, xhr) {
-              console.log(data);
-              _self.admins = data;
-              _self.admins_num += data.length;
+              console.log(data.rs);
+              _self.admins = data.rs;
+              _self.admins_num += data.rs.length;
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -338,8 +338,8 @@
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              console.log(data);
-              _self.users.push(data);
+              console.log(data.rs);
+              _self.users.push(data.rs);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);

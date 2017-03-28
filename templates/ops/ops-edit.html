@@ -405,7 +405,7 @@
             "paragraphs": paragraphs,
           };
           var json = JSON.stringify(data);
-          console.log(json);
+          // console.log(json);
 
           $.ajax({
             type: "PUT",
@@ -415,9 +415,10 @@
             headers: {"Authorization":"Bearer {{ access_token }}"},
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              weui.alert("保存成功！","提示信息",function(){
-        			      location.href = "/ops/edit";
-        			});
+              weui.Loading.success();
+              // weui.alert("保存成功！","提示信息",function(){
+        			//       location.href = "/ops/edit";
+        			// });
 
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -460,7 +461,7 @@
             "city":city
           };
           var json = JSON.stringify(data);
-          console.log(json);
+          // console.log(json);
 
           $.ajax({
             type: "PUT",
@@ -470,9 +471,7 @@
             headers: {"Authorization":"Bearer {{ access_token }}"},
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              weui.alert("保存成功！","提示信息",function(){
-        			    location.href = "/ops/edit";
-        			});
+              weui.Loading.success();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);

@@ -142,7 +142,8 @@ class ArticlesDraftHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
+        data = json_decode(response.body)
+        articles = data['rs']
 
         self.render('article/draft.html',
                 ops=ops,
@@ -164,7 +165,8 @@ class ArticlesPublishHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
+        data = json_decode(response.body)
+        articles = data['rs']
 
         # activity['beginTime'] = timestamp_datetime(long(activity['beginTime'] / 1000))
 
@@ -190,7 +192,8 @@ class ArticlesEditHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        article = json_decode(response.body)
+        data = json_decode(response.body)
+        article = data['rs']
 
         ops = self.get_ops_info()
 
@@ -217,7 +220,8 @@ class VendorEditHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        club = json_decode(response.body)
+        data = json_decode(response.body)
+        club = data['rs']
         if not club.has_key('img'):
             club['img'] = ''
         if not club.has_key('paragraphs'):
@@ -248,7 +252,8 @@ class MomentsAllHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        multimedias = json_decode(response.body)
+        data = json_decode(response.body)
+        multimedias = data['rs']
 
         self.render('moment/all.html',
                 ops=ops,
@@ -283,7 +288,8 @@ class MomentsVideosHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        multimedias = json_decode(response.body)
+        data = json_decode(response.body)
+        multimedias = data['rs']
 
         for multimedia in multimedias:
             multimedia['publish_time'] = timestamp_datetime(long(multimedia['publish_time']))

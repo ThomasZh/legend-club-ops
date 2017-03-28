@@ -215,7 +215,8 @@ class BaseHandler(tornado.web.RequestHandler):
                 "app_secret":"2518e11b3bc89ebec594350d5739f29e"}
         _json = json_encode(data)
         response = http_client.fetch(url, method="POST", body=_json)
-        session_code = json_decode(response.body)
+        data = json_decode(response.body)
+        session_code = data['rs']
         logging.info("got session_code %r", session_code)
         code = session_code['code']
         return code
@@ -227,7 +228,8 @@ class BaseHandler(tornado.web.RequestHandler):
         http_client = HTTPClient()
         headers={"Authorization":"Bearer "+access_token}
         response = http_client.fetch(url, method="GET", headers=headers)
-        myinfo = json_decode(response.body)
+        data = json_decode(response.body)
+        myinfo = data['rs']
         logging.info("got myinfo %r", myinfo)
         return myinfo
 
@@ -269,7 +271,8 @@ class AuthorizationHandler(BaseHandler):
             response = http_client.fetch(url, method="GET", headers=headers)
             logging.info("got response %r", response.body)
             # account_id,nickname,avatar,club_id,club_name,league_id,_rank
-            ops = json_decode(response.body)
+            data = json_decode(response.body)
+            ops = data['rs']
             return ops
         except:
             err_title = str( sys.exc_info()[0] );
@@ -316,7 +319,8 @@ class AuthorizationHandler(BaseHandler):
                             logging.info("request %r body %r", url, _json)
                             response = http_client.fetch(url, method="POST", headers=headers, body=_json)
                             logging.info("got response %r", response.body)
-                            session_ticket = json_decode(response.body)
+                            data = json_decode(response.body)
+                            session_ticket = data['rs']
 
                             self.set_secure_cookie("access_token", session_ticket['access_token'])
                             self.set_secure_cookie("expires_at", str(session_ticket['expires_at']))

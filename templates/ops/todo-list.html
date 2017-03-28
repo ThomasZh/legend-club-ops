@@ -254,9 +254,9 @@
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              console.log(data);
-              _self.franchises = data;
-              _self.franchise_num += data.length;
+              console.log(data.rs);
+              _self.franchises = data.rs;
+              _self.franchise_num += data.rs.length;
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);

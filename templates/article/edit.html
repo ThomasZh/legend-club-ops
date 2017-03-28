@@ -531,7 +531,7 @@
           headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
-            console.log("saveCategories:"+data);
+            console.log("saveCategories:"+data.rs);
             _self.queryCategories();
             weui.Loading.success();
           },
@@ -554,8 +554,8 @@
           headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
-            console.log("queryCategories:"+data);
-            _self.categories = data;
+            console.log("queryCategories:"+data.rs);
+            _self.categories = data.rs;
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
