@@ -275,6 +275,24 @@ class MomentsImagesHandler(AuthorizationHandler):
                 api_domain=API_DOMAIN)
 
 
+class MomentsUploadImagesHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        ops = self.get_ops_info()
+
+        self.render('moment/upload-image.html',
+                ops=ops,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET,
+                access_token=access_token,
+                club_id=ops['club_id'])
+
+
 class MomentsVideosHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):

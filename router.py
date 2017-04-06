@@ -42,6 +42,7 @@ def map():
 
         (r'/ops/moments/all', getattr(work_sheet, 'MomentsAllHandler')),
         (r'/ops/moments/images', getattr(work_sheet, 'MomentsImagesHandler')),
+        (r'/ops/moments/upload-images', getattr(work_sheet, 'MomentsUploadImagesHandler')),
         (r'/ops/moments/videos', getattr(work_sheet, 'MomentsVideosHandler')),
 
         # comm
