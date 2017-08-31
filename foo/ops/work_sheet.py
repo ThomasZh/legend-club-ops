@@ -238,6 +238,83 @@ class VendorEditHandler(AuthorizationHandler):
                 upyun_form_api_secret=UPYUN_FORM_API_SECRET,
                 upyun_bucket=UPYUN_BUCKET)
 
+# 地理位置
+class VendorPositionHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        ops = self.get_ops_info()
+
+        params = {"filter":"detail"}
+        url = url_concat(API_DOMAIN+"/api/clubs/"+ops['club_id'],params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        club = data['rs']
+        geo_x = club['gcj02']['x']
+        geo_y = club['gcj02']['y']
+
+        self.render('ops/ops-position.html',
+                ops=ops,
+                club_id=ops['club_id'],
+                club=club,
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                geo_x=geo_x,
+                geo_y=geo_y)
+
+
+# 客流量
+class VendorPassengerFlowHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        ops = self.get_ops_info()
+
+        params = {"filter":"detail"}
+        url = url_concat(API_DOMAIN+"/api/clubs/"+ops['club_id'],params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        club = data['rs']
+
+        self.render('ops/passenger-flow.html',
+                ops=ops,
+                club_id=ops['club_id'],
+                club=club,
+                access_token=access_token,
+                api_domain=API_DOMAIN)
+
+
+# 停车场信息
+class VendorParkingHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        ops = self.get_ops_info()
+
+        params = {"filter":"detail"}
+        url = url_concat(API_DOMAIN+"/api/clubs/"+ops['club_id'],params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        club = data['rs']
+        geo_x = club['gcj02']['x']
+        geo_y = club['gcj02']['y']
+
+        self.render('ops/ops-parking.html',
+                ops=ops,
+                club_id=ops['club_id'],
+                club=club,
+                access_token=access_token,
+                API_DOMAIN=API_DOMAIN)
+
 
 class MomentsAllHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
