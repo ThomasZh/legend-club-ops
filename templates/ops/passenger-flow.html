@@ -126,19 +126,19 @@
       function getJson(){
         $.ajax({
           type: "GET",
-          url: "{{ api_domain }}/api/def/clubs/{{ club_id }}/visitor-flows",
+          url: "{{ api_domain }}/api/clubs/{{ club_id }}/visitor-flows",
           dataType: "json",
           headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
-            console.log(data);
             var dataObj = data.rs;
-            console.log(dataObj);
+            // console.log(dataObj);
             if(data.err_code == 200){
               for (var i=0; i<dataObj.length;i++){
                 var html = '<tr>';
-                    html +=  '<td>'+parseFloat(dataObj[i]['_min'])/100+'</td>';
-                    html +=  '<td>'+parseFloat(dataObj[i]['_max'])/100+'</td>';
+                    html +=  '<th>'+dataObj[i]['_seq']+'</th>';
+                    html +=  '<td>'+dataObj[i]['current']+'</td>';
+                    html +=  '<td>'+dataObj[i]['max']+'</td>';
                     html +=  '<td>';
                     html +=  '<a data_id = "'+ dataObj[i]['_id'] +'" class="btn btn-info btn-xs cate-edit">';
                     html +=  '<i class="fa fa-pencil"></i> 编辑 </a>';
@@ -176,29 +176,29 @@
             num +=1;
         }).on('click','.new-edit',function(){
           var _this = $(this);
-          var minNum = $(this).parent().prev().prev().prev().children().val();
-          var maxNum = $(this).parent().prev().prev().children().val();
-          var _minNum = minNum*100;
-          var _maxNum = maxNum*100;
+          var minNum = $(this).parent().prev().prev().children().val();
+          var maxNum = $(this).parent().prev().children().val();
+          // var _minNum = minNum*100;
+          // var _maxNum = maxNum*100;
           if(minNum == '' || maxNum == ''){
             $.alert("填写不完整!");
           }else{
-            var data = {'current':_minNum, 'max':_maxNum}
+            var data = {'current':minNum, 'max':maxNum}
             var _json = JSON.stringify(data);
-                console.log(_json);
+                // console.log(_json);
               $.ajax({
                 type: "POST",
-                url: "{{ api_domain }}/api/def/clubs/{{club_id}}/visitor-flows",
+                url: "{{ api_domain }}/api/clubs/{{club_id}}/visitor-flows",
                 dataType: "json",
                 data:_json,
                 headers: {"Authorization":"Bearer {{access_token}}"},
                 contentType: 'application/json',
                 success: function(data, status, xhr) {
-                  console.log(data);
+                  // console.log(data);
                   var data_id = data.rs._id;
                   if(data.err_code == 200){
-                    _this.parent().prev().prev().prev().html(minNum);
-                    _this.parent().prev().prev().html(maxNum);
+                    _this.parent().prev().prev().html(minNum);
+                    _this.parent().prev().html(maxNum);
                     _this.attr('data_id',data_id);
                     _this.next().attr('data_id',data_id);
                     _this.removeClass('new-edit').addClass('cate-edit');
@@ -222,7 +222,7 @@
         function dele(cost_id){
           $.ajax({
             type: "DELETE",
-            url: "{{ api_domain }}/api/def/clubs/{club_id}/visitor-flows/"+cost_id,
+            url: "{{ api_domain }}/api/clubs/{club_id}/visitor-flows/"+cost_id,
             dataType: "json",
             headers: {"Authorization":"Bearer {{access_token}}"},
             contentType: 'application/json',
@@ -242,15 +242,16 @@
         function cateEidt(cost_id,_min,_max,seq){
           var data= {'current':_min, 'max':_max, '_seq':seq};
           var _json = JSON.stringify(data);
-          console.log(_json);
+          // console.log(_json);
           $.ajax({
             type: "PUT",
-            url: "{{ api_domain }}/api/def/clubs/{{club_id}}/visitor-flows/"+cost_id,
+            url: "{{ api_domain }}/api/clubs/{{club_id}}/visitor-flows/"+cost_id,
             dataType: "json",
             data:_json,
             headers: {"Authorization":"Bearer {{access_token}}"},
             contentType: 'application/json',
             success: function(data, status, xhr) {
+              // console.log(data);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -276,31 +277,32 @@
         // 修改操作
         $(document).on('click','.cate-edit',function(){
           $(this).html('<i class="fa fa-save"></i> 保存');
-          var old_min = $(this).parent().prev().prev().prev().text();
-          var old_max = $(this).parent().prev().prev().text();
-          var old_seq = $(this).parent().prev().prev().prev().prev().text();
+          var old_min = $(this).parent().prev().prev().text();
+          var old_max = $(this).parent().prev().text();
+          var old_seq = $(this).parent().prev().prev().prev().text();
           var _min = $('<input type="text" class="c-edit" value="'+old_min+'" style="width:100px;" />');
           var _max = $('<input type="number" class="max-edit" value="'+old_max+'" style="width:100px;" />');
           var _seq = $('<input type="number" class="seq-edit" value="'+old_seq+'" style="width:100px;" />');
-          $(this).parent().prev().prev().prev().prev().html(_seq);
-          $(this).parent().prev().prev().prev().html(_min);
-          $(this).parent().prev().prev().html(_max);
+          $(this).parent().prev().prev().prev().html(_seq);
+          $(this).parent().prev().prev().html(_min);
+          $(this).parent().prev().html(_max);
           $(this).removeClass('cate-edit').addClass('cate-save');
         }).on('click','.cate-save',function(){
-          var min = $(this).parent().prev().prev().prev().children().val();
-          var max = $(this).parent().prev().prev().children().val();
-          var _min = min*100;
-          var _max = max*100;
-          var seq = $(this).parent().prev().prev().prev().prev().children().val();
-          if(min == "" || max == "" || cost=="" || seq == ""){
+          var min = $(this).parent().prev().prev().children().val();
+          var max = $(this).parent().prev().children().val();
+          var seq = $(this).parent().prev().prev().prev().children().val();
+          // var _min = min*100;
+          // var _max = max*100;
+          var seq = $(this).parent().prev().prev().prev().children().val();
+          if(min == "" || max == "" || seq == ""){
             $.alert('填写不完整！');
             return false;
           }
           var _id = $(this).attr('data_id');
-          cateEidt(_id,_min,_max,seq);
-          $(this).parent().prev().prev().html(max);
-          $(this).parent().prev().prev().prev().html(min);
-          $(this).parent().prev().prev().prev().prev().html(seq);
+          cateEidt(_id,min,max,seq);
+          $(this).parent().prev().html(max);
+          $(this).parent().prev().prev().html(min);
+          $(this).parent().prev().prev().prev().html(seq);
           $(this).html('<i class="fa fa-pencil"></i> 编辑');
           $(this).removeClass('cate-save').addClass('cate-edit');
         });

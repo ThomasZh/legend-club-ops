@@ -127,21 +127,21 @@
     function getJson(){
       $.ajax({
         type: "GET",
-        url: "{{ API_DOMAIN }}/api/def/leagues/{{ LEAGUE_ID }}/shipping-costs",
+        url: "{{ API_DOMAIN }}/api/clubs/{{club_id}}/car-parks",
         dataType: "json",
         headers: {"Authorization":"Bearer {{access_token}}"},
         contentType: 'application/json',
         success: function(data, status, xhr) {
-          console.log(data);
+          // console.log(data);
           var dataObj = data.rs;
-          console.log(dataObj);
+          // console.log(dataObj);
           if(data.err_code == 200){
             for (var i=0; i<dataObj.length;i++){
               var html = '<tr>';
                   html += '<th scope="row">'+dataObj[i]['_seq']+'</th>';
-                  html +=  '<td>'+parseFloat(dataObj[i]['_min'])/100+'</td>';
-                  html +=  '<td>'+parseFloat(dataObj[i]['_max'])/100+'</td>';
-                  html +=  '<td>'+parseFloat(dataObj[i]['cost'])/100+'</td>';
+                  html +=  '<td>'+dataObj[i]['name']+'</td>';
+                  html +=  '<td>'+dataObj[i]['max_space']+'</td>';
+                  html +=  '<td>'+dataObj[i]['remain_space']+'</td>';
                   html +=  '<td>';
                   html +=  '<a data_id = "'+ dataObj[i]['_id'] +'" class="btn btn-info btn-xs cate-edit">';
                   html +=  '<i class="fa fa-pencil"></i> 编辑 </a>';
@@ -163,7 +163,7 @@
         }
       });
     };
-    // 添加运费操作
+    // 添加操作
       $(document).on('click','#add-btn',function(){
         var html = '<tr>';
             html += '<th scope="row">'+num+'</th>';
@@ -180,32 +180,32 @@
           num +=1;
       }).on('click','.new-edit',function(){
         var _this = $(this);
-        var minNum = $(this).parent().prev().prev().prev().children().val();
+        var name = $(this).parent().prev().prev().prev().children().val();
         var maxNum = $(this).parent().prev().prev().children().val();
-        var costNum = $(this).parent().prev().children().val();
-        var _costNum = costNum*100;
-        var _minNum = minNum*100;
-        var _maxNum = maxNum*100;
-        if(minNum == '' || maxNum == '' || costNum == ''){
+        var minNum = $(this).parent().prev().children().val();
+        // var _costNum = costNum*100;
+        // var _minNum = minNum*100;
+        // var _maxNum = maxNum*100;
+        if(name == '' || maxNum == '' || minNum == ''){
           $.alert("填写不完整!");
         }else{
-          var data = {'_min':_minNum, '_max':_maxNum, 'cost':_costNum}
+          var data = {'name':name, 'max_space':maxNum, 'remain_space':minNum}
           var _json = JSON.stringify(data);
-              console.log(_json);
+              // console.log(_json);
             $.ajax({
               type: "POST",
-              url: "{{ API_DOMAIN }}/api/def/leagues/{{ LEAGUE_ID }}/shipping-costs",
+              url: "{{ API_DOMAIN }}/api/clubs/{{club_id}}/car-parks",
               dataType: "json",
               data:_json,
               headers: {"Authorization":"Bearer {{access_token}}"},
               contentType: 'application/json',
               success: function(data, status, xhr) {
-                console.log(data);
+                // console.log(data);
                 var data_id = data.rs._id;
                 if(data.err_code == 200){
-                  _this.parent().prev().prev().prev().html(minNum);
+                  _this.parent().prev().prev().prev().html(name);
                   _this.parent().prev().prev().html(maxNum);
-                  _this.parent().prev().html(costNum);
+                  _this.parent().prev().html(minNum);
                   _this.attr('data_id',data_id);
                   _this.next().attr('data_id',data_id);
                   _this.removeClass('new-edit').addClass('cate-edit');
@@ -225,16 +225,16 @@
 
       })
 
-    // 分类删除
+    // 停车场删除
       function dele(cost_id){
         $.ajax({
           type: "DELETE",
-          url: "{{ API_DOMAIN }}/api/def/shipping-costs/"+cost_id,
+          url: "{{ API_DOMAIN }}/api/clubs/{{club_id}}/car-parks/"+cost_id,
           dataType: "json",
           headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
-
+              // console.log(data);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -245,19 +245,20 @@
           }
         });
       };
-      // 分类编辑
-      function cateEidt(cost_id,_min,_max,cost,seq){
-        var data= {'_min':_min, '_max':_max, 'cost':cost, '_seq':seq};
+      // 停车场编辑
+      function cateEidt(cost_id,name,_max,cost,seq){
+        var data= {'name':name, 'max_space':_max, 'remain_space':cost, '_seq':seq};
         var _json = JSON.stringify(data);
         console.log(_json);
         $.ajax({
           type: "PUT",
-          url: "{{ API_DOMAIN }}/api/def/shipping-costs/"+cost_id,
+          url: "{{ API_DOMAIN }}/api/clubs/{{club_id}}/car-parks/"+cost_id,
           dataType: "json",
           data:_json,
           headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
+            // console.log(data);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -272,7 +273,7 @@
       $(document).on('click','.cate-dele',function(){
         category_id = $(this).attr('data_id');
         var _this = $(this);
-        $.confirm('确定删除该运费配置吗？',function(){
+        $.confirm('确定删除该停车场配置吗？',function(){
           dele(category_id);
           _this.parent().parent().remove();
         },function(){
@@ -297,22 +298,23 @@
         $(this).parent().prev().html(_cost);
         $(this).removeClass('cate-edit').addClass('cate-save');
       }).on('click','.cate-save',function(){
-        var min = $(this).parent().prev().prev().prev().children().val();
+        var name = $(this).parent().prev().prev().prev().children().val();
         var max = $(this).parent().prev().prev().children().val();
         var cost = $(this).parent().prev().children().val();
-        var _cost = cost*100;
-        var _min = min*100;
-        var _max = max*100;
         var seq = $(this).parent().prev().prev().prev().prev().children().val();
-        if(min == "" || max == "" || cost=="" || seq == ""){
+        // var _cost = cost*100;
+        // var _min = min*100;
+        // var _max = max*100;
+        var seq = $(this).parent().prev().prev().prev().prev().children().val();
+        if(name == "" || max == "" || cost=="" || seq == ""){
           $.alert('填写不完整！');
           return false;
         }
         var _id = $(this).attr('data_id');
-        cateEidt(_id,_min,_max,_cost,seq);
+        cateEidt(_id,name,max,cost,seq);
         $(this).parent().prev().html(cost);
         $(this).parent().prev().prev().html(max);
-        $(this).parent().prev().prev().prev().html(min);
+        $(this).parent().prev().prev().prev().html(name);
         $(this).parent().prev().prev().prev().prev().html(seq);
         $(this).html('<i class="fa fa-pencil"></i> 编辑');
         $(this).removeClass('cate-save').addClass('cate-edit');
