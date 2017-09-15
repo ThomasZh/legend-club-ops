@@ -215,7 +215,7 @@ class VendorEditHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
-
+        
         url = API_DOMAIN+"/api/clubs/"+ops['club_id']
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
