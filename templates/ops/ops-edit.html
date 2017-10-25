@@ -41,7 +41,7 @@
           <br />
 
           <!-- sidebar menu -->
-          {% module Template("ops/block-sidebar-menu.html") %}
+          {% module Template("ops/block-sidebar-menu.html", club=club) %}
           <!-- /sidebar menu -->
           <br />
 
@@ -71,7 +71,11 @@
                 <div class="col-md-8 col-sm-8 col-xs-12">
                   <div class="x_panel">
                     <div class="x_title">
-                      <h2>加盟商信息</h2>
+                      {% if club['franchise_type'] == 'scenery' %}
+                      <h2>景区信息</h2>
+                      {% elif club['franchise_type'] == 'supplier' %}
+                      <h2>供应商信息</h2>
+                      {% end %}
                       <ul class="nav navbar-right panel_toolbox">
                       </ul>
                       <div class="clearfix"></div>
@@ -147,176 +151,200 @@
                                                     <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
                                                     <!-- <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
                   <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a> -->
-                                                </div>
-
-                                                <div class="btn-group">
-                                                    <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
-                                                    <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
-                                                    <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
-                                                    <a class="btn" data-edit="justifyfull" title="Jus tify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
-                                                </div>
-
-                                                <div class="btn-group">
-                                                    <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
-                                                    <div class="dropdown-menu input-append">
-                                                        <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
-                                                        <button class="btn" type="button">Add</button>
-                                                    </div>
-                                                    <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
-                                                </div>
-
-                                                <div class="btn-group">
-                                                    <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="fa fa-picture-o"></i></a>
-                                                    <input type="file" id="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
-                                                </div>
-
-                                                <div class="btn-group">
-                                                    <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
-                                                    <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
-                                                </div>
-                                            </div>
-
-
-                                            <div id="editor"></div>
-
-                                            <!-- <textarea name="descr" id="descr" style="display:none;"></textarea> -->
-
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
-                <textarea id="paragraphs" name="paragraphs" rows=6 class="form-control col-md-7 col-xs-12"></textarea>
-                </div> -->
-                        </div>
-                    </div>
 
-                    <!-- <div class="ln_solid"></div> -->
-                    <div class="form-group">
-                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <button type="submit" class="btn btn-success">保存</button>
-                      </div>
-                    </div>
+                                    <div class="btn-group">
+                                        <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                        <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                        <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                        <a class="btn" data-edit="justifyfull" title="Jus tify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                    </div>
 
-                    </form>
+                                    <div class="btn-group">
+                                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                        <div class="dropdown-menu input-append">
+                                            <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                            <button class="btn" type="button">Add</button>
+                                        </div>
+                                        <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                    </div>
 
-                  </div>
-                </div>
+                                    <div class="btn-group">
+                                        <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="fa fa-picture-o"></i></a>
+                                        <input type="file" id="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
+                                    </div>
+
+                                    <div class="btn-group">
+                                        <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
+                                        <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
+                                    </div>
+                                  </div>
 
 
-                <div id="article-base" class="col-md-4 col-sm-4 col-xs-12">
+                                  <div id="editor"></div>
 
-                  <div class="x_panel">
-                    <div class="x_title">
-                      <h2>加盟商基本信息</h2>
-                      <ul class="nav navbar-right panel_toolbox">
-                      </ul>
-                      <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
+                                  <!-- <textarea name="descr" id="descr" style="display:none;"></textarea> -->
 
-                      <form id="title-form" action="" method="" onsubmit="return false;" class="form-horizontal form-label-left">
-
-                        <div class="form-group">
-                          <label class="col-md-8 col-sm-6 col-xs-12" for="title">加盟商名称 <span class="required">*</span>
-                          </label>
-                          <div class="col-md-12 col-sm-6 col-xs-12">
-                            <input type="text" id="title" name="title" value="{{ club['name'] }}" class="form-control col-md-7 col-xs-12">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">加盟商简介 <span class="required">*</span>
-                            </label>
-                          <div class="col-md-12 col-sm-6 col-xs-12">
-                            <textarea type="text" id="subtitle" rows=3 name="subtitle" class="form-control col-md-7 col-xs-12">{{ club['introduction'] }}</textarea>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">景区级别 <span class="required">*</span>
-                          </label>
-                          <div class="col-md-12 col-sm-6 col-xs-12">
-                              <select class="select2_single form-control" id="level" name="level">
-                                {% if club['scenery'] == '1' %}
-                                  <option value="1" name="level" selected="true">A景区</option>
-                                {% else %}
-                                  <option value="1" name="level">A景区</option>
-                                {% end %}
-                                {% if club['scenery'] == '2' %}
-                                  <option value="2" name="level" selected="true">2A景区</option>
-                                {% else %}
-                                  <option value="2" name="level">2A景区</option>
-                                {% end %}
-                                {% if club['scenery'] == '3' %}
-                                  <option value="3" name="level" selected="true">3A景区</option>
-                                {% else %}
-                                  <option value="3" name="level">3A景区</option>
-                                {% end %}
-                                {% if club['scenery'] == '4' %}
-                                  <option value="4" name="level" selected="true">4A景区</option>
-                                {% else %}
-                                  <option value="4" name="level">4A景区</option>
-                                {% end %}
-                                {% if club['scenery'] == '5' %}
-                                  <option value="5" name="level" selected="true">5A景区</option>
-                                {% else %}
-                                  <option value="5" name="level">5A景区</option>
-                                {% end %}
-                                {% if club['scenery'] == '6' %}
-                                  <option value="6" name="level" selected="true">其他景区</option>
-                                {% else %}
-                                  <option value="6" name="level">其他景区</option>
-                                {% end %}
-                              </select>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">加盟商地址 <span class="required">*</span>
-                            </label>
-                          <div class="col-md-12 col-sm-6 col-xs-12">
-
-                              <div id="citySelect" style="margin-top:5px;">
-                                   <select class="prov" id="prov"></select>
-                                   <select class="city" disabled="disabled" id="city"></select>
                               </div>
-
                           </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-md-8 col-sm-6 col-xs-12" for="img">加盟商背景图片 <span class="required">*</span>
-                            </label>
-                          <div class="col-md-12 col-sm-6 col-xs-12">
-                            <input type="file" id="file1" name="file" class="form-control col-md-7 col-xs-12">
-                            <input id="img" name="img" value="{{ club['img'] }}" type="hidden" />
-                            <small style="color:red;">图片大小：125px * 125px </small>
-                          </div>
-                        </div>
-
-                      <div class="ln_solid"></div>
-                      <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                          <button type="submit" class="btn btn-success">保存</button>
-                        </div>
                       </div>
-
-                      </form>
-
-                    </div>
                   </div>
+                  </div>
+              </div>
+
+              <!-- <div class="ln_solid"></div> -->
+              <div class="form-group">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <button type="submit" class="btn btn-success">保存</button>
                 </div>
+              </div>
+
+              </form>
 
             </div>
-
           </div>
+
+
+            <div id="article-base" class="col-md-4 col-sm-4 col-xs-12">
+
+              <div class="x_panel">
+                <div class="x_title">
+                  {% if club['franchise_type'] == 'scenery' %}
+                  <h2>景区基本信息</h2>
+                  {% elif club['franchise_type'] == 'supplier' %}
+                  <h2>供应商基本信息</h2>
+                  {% end %}
+                  <ul class="nav navbar-right panel_toolbox">
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+                  <form id="title-form" action="" method="" onsubmit="return false;" class="form-horizontal form-label-left">
+
+                    <div class="form-group">
+                      <label class="col-md-8 col-sm-6 col-xs-12" for="title">
+                      {% if club['franchise_type'] == 'scenery' %}
+                        景区
+                      {% elif club['franchise_type'] == 'supplier' %}
+                        供应商
+                      {% end %}名称 <span class="required">*</span>
+                      </label>
+                      <div class="col-md-12 col-sm-6 col-xs-12">
+                        <input type="text" id="title" name="title" value="{{ club['name'] }}" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">
+                        {% if club['franchise_type'] == 'scenery' %}
+                          景区
+                        {% elif club['franchise_type'] == 'supplier' %}
+                          供应商
+                        {% end %}简介 <span class="required">*</span>
+                        </label>
+                      <div class="col-md-12 col-sm-6 col-xs-12">
+                        <textarea type="text" id="subtitle" rows=3 name="subtitle" class="form-control col-md-7 col-xs-12">{{ club['introduction'] }}</textarea>
+                      </div>
+                    </div>
+
+                    {% if club['franchise_type'] == 'scenery' or club['franchise_type'] == u'景区' %}
+                    <div class="form-group">
+                      <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">景区级别 <span class="required">*</span>
+                      </label>
+                      <div class="col-md-12 col-sm-6 col-xs-12">
+                          <select class="select2_single form-control" id="level" name="level">
+                            {% if club['scenery'] == '1' %}
+                              <option value="1" name="level" selected="true">A景区</option>
+                            {% else %}
+                              <option value="1" name="level">A景区</option>
+                            {% end %}
+                            {% if club['scenery'] == '2' %}
+                              <option value="2" name="level" selected="true">2A景区</option>
+                            {% else %}
+                              <option value="2" name="level">2A景区</option>
+                            {% end %}
+                            {% if club['scenery'] == '3' %}
+                              <option value="3" name="level" selected="true">3A景区</option>
+                            {% else %}
+                              <option value="3" name="level">3A景区</option>
+                            {% end %}
+                            {% if club['scenery'] == '4' %}
+                              <option value="4" name="level" selected="true">4A景区</option>
+                            {% else %}
+                              <option value="4" name="level">4A景区</option>
+                            {% end %}
+                            {% if club['scenery'] == '5' %}
+                              <option value="5" name="level" selected="true">5A景区</option>
+                            {% else %}
+                              <option value="5" name="level">5A景区</option>
+                            {% end %}
+                            {% if club['scenery'] == '6' %}
+                              <option value="6" name="level" selected="true">其他景区</option>
+                            {% else %}
+                              <option value="6" name="level">其他景区</option>
+                            {% end %}
+                          </select>
+                      </div>
+                    </div>
+                    {% end %}
+                    <div class="form-group">
+                      <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">
+                        {% if club['franchise_type'] == 'scenery' %}
+                          景区
+                        {% elif club['franchise_type'] == 'supplier' %}
+                          供应商
+                        {% end %}地址 <span class="required">*</span>
+                        </label>
+                      <div class="col-md-12 col-sm-6 col-xs-12">
+
+                          <div id="citySelect" style="margin-top:5px;">
+                               <select class="prov" id="prov"></select>
+                               <select class="city" disabled="disabled" id="city"></select>
+                          </div>
+
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-8 col-sm-6 col-xs-12" for="img">
+                        {% if club['franchise_type'] == 'scenery' %}
+                          景区
+                        {% elif club['franchise_type'] == 'supplier' %}
+                          供应商
+                        {% end %}背景图片 <span class="required">*</span>
+                        </label>
+                      <div class="col-md-12 col-sm-6 col-xs-12">
+                        <input type="file" id="file1" name="file" class="form-control col-md-7 col-xs-12">
+                        <input id="img" name="img" value="{{ club['img'] }}" type="hidden" />
+                        <small style="color:red;">图片大小：125px * 125px </small>
+                      </div>
+                    </div>
+
+                  <div class="ln_solid"></div>
+                  <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                      <button type="submit" class="btn btn-success">保存</button>
+                    </div>
+                  </div>
+
+                  </form>
+
+                </div>
+              </div>
+            </div>
+
         </div>
 
-        <!-- footer content -->
-        {% module Template("ops/block-footer.html", ops=ops) %}
-        <!-- /footer content -->
-
       </div>
-      <!-- /page content -->
+    </div>
+
+      <!-- footer content -->
+      {% module Template("ops/block-footer.html", ops=ops) %}
+      <!-- /footer content -->
 
     </div>
+    <!-- /page content -->
+
+  </div>
   </div>
 
   <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>

@@ -47,8 +47,10 @@ class OpsIndexHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
         self.render('ops/index.html',
-                ops=ops)
+                ops=ops,
+                club=club)
 
 
 class ProfileEditHandler(AuthorizationHandler):
@@ -57,8 +59,10 @@ class ProfileEditHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
         self.render('ops/profile-edit.html',
                 ops=ops,
+                club=club,
                 access_token=access_token,
                 api_domain=API_DOMAIN,
                 upyun_domain=UPYUN_DOMAIN,
@@ -84,13 +88,14 @@ class ProfileEditHandler(AuthorizationHandler):
         self.redirect("/ops/profile/edit")
 
 
-# 标签
-class OpsTagsHandler(AuthorizationHandler):
+# 景区标签
+class OpsFranchiseTagsHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
         # league_id = league_id
         # counter = self.get_counter(league_id)
 
@@ -214,8 +219,9 @@ class OpsTagsHandler(AuthorizationHandler):
                     tag['selected'] = True
                     break
 
-        self.render('ops/ops-tags.html',
+        self.render('ops/ops-franchise-tags.html',
                 ops=ops,
+                club=club,
                 club_id=club_id,
                 hot_franchise_tags=hot_franchise_tags,
                 product_tags=product_tags,
@@ -228,16 +234,68 @@ class OpsTagsHandler(AuthorizationHandler):
                 franchise_tags=franchise_tags)
 
 
+# 供应商标签
+class OpsSupplierTagsHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
+        # league_id = league_id
+        # counter = self.get_counter(league_id)
+
+        club_id = ops['club_id']
+        logging.info("got club_id",club_id)
+
+        # 查询一个供应商所有的tags
+        url = API_DOMAIN + "/api/clubs/"+ club_id +"/categories"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers,)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        franchise_tags = data['rs']
+
+        # 特色产品tags
+        category_id = '8bc87862b98811e7805e00163e045306'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        product_tags = data['rs']
+
+        for tag in product_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        self.render('ops/ops-supplier-tags.html',
+                ops=ops,
+                club = club,
+                club_id=club_id,
+                product_tags=product_tags,
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                franchise_tags=franchise_tags)
+
+
 class OperatorsHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
-        logging.info("ops>>>> %r",ops)
+        club = self.get_club_info(ops['club_id'])
 
         self.render('ops/operators.html',
                 ops=ops,
+                club=club,
                 club_id=ops['club_id'],
                 access_token=access_token,
                 api_domain=API_DOMAIN)
@@ -247,11 +305,11 @@ class TodoListHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
         ops = self.get_ops_info()
-
+        club = self.get_club_info(ops['club_id'])
         self.render('ops/todo-list.html',
                 ops=ops,
+                club=club,
                 club_id=ops['club_id'],
                 api_domain=API_DOMAIN)
 
@@ -262,9 +320,10 @@ class ArticlesCreateHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
-
+        club = self.get_club_info(ops['club_id'])
         self.render('article/create.html',
                 ops=ops,
+                club=club,
                 club_id=ops['club_id'],
                 access_token=access_token,
                 api_domain=API_DOMAIN,
@@ -280,6 +339,7 @@ class ArticlesDraftHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
 
         params = {"filter":"club", "club_id":ops['club_id'], "status":"draft", "type":0}
         url = url_concat(API_DOMAIN+"/api/articles", params)
@@ -291,6 +351,7 @@ class ArticlesDraftHandler(AuthorizationHandler):
 
         self.render('article/draft.html',
                 ops=ops,
+                club=club,
                 access_token=access_token,
                 club_id=ops['club_id'],
                 articles=articles,
@@ -303,6 +364,7 @@ class ArticlesPublishHandler(AuthorizationHandler):
         logging.info(self.request)
 
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
 
         params = {"filter":"club", "club_id":ops['club_id'], "status":"publish"}
         url = url_concat(API_DOMAIN+"/api/articles", params)
@@ -319,6 +381,7 @@ class ArticlesPublishHandler(AuthorizationHandler):
 
         self.render('article/publish.html',
                 ops=ops,
+                club=club,
                 club_id=ops['club_id'],
                 articles=articles,
                 api_domain=API_DOMAIN)
@@ -340,9 +403,11 @@ class ArticlesEditHandler(AuthorizationHandler):
         article = data['rs']
 
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
 
         self.render('article/edit.html',
                 ops=ops,
+                club=club,
                 club_id=ops['club_id'],
                 access_token=access_token,
                 article=article,
@@ -359,17 +424,7 @@ class VendorEditHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
-
-        url = API_DOMAIN+"/api/clubs/"+ops['club_id']
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        data = json_decode(response.body)
-        club = data['rs']
-        if not club.has_key('img'):
-            club['img'] = ''
-        if not club.has_key('paragraphs'):
-            club['paragraphs'] = ''
+        club = self.get_club_info(ops['club_id'])
 
         self.render('ops/ops-edit.html',
                 ops=ops,
@@ -466,6 +521,7 @@ class MomentsAllHandler(AuthorizationHandler):
         logging.info(self.request)
 
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
 
         # multimedia
         params = {"filter":"club", "club_id":ops['club_id'], "idx":0, "limit":20}
@@ -478,6 +534,7 @@ class MomentsAllHandler(AuthorizationHandler):
 
         self.render('moment/all.html',
                 ops=ops,
+                club=club,
                 club_id=ops['club_id'],
                 multimedias=multimedias,
                 api_domain=API_DOMAIN)
@@ -489,9 +546,11 @@ class MomentsImagesHandler(AuthorizationHandler):
         logging.info(self.request)
 
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
 
         self.render('moment/images.html',
                 ops=ops,
+                club=club,
                 club_id=ops['club_id'],
                 api_domain=API_DOMAIN)
 
@@ -502,9 +561,11 @@ class MomentsUploadImagesHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
 
         self.render('moment/upload-image.html',
                 ops=ops,
+                club=club,
                 api_domain=API_DOMAIN,
                 upyun_domain=UPYUN_DOMAIN,
                 upyun_notify_url=UPYUN_NOTIFY_URL,
@@ -520,6 +581,7 @@ class MomentsVideosHandler(AuthorizationHandler):
         logging.info(self.request)
 
         ops = self.get_ops_info()
+        club = self.get_club_info(ops['club_id'])
 
         # multimedia
         params = {"filter":"club", "club_id":ops['club_id'], "idx":0, "limit":20}
@@ -535,6 +597,7 @@ class MomentsVideosHandler(AuthorizationHandler):
 
         self.render('moment/videos.html',
                 ops=ops,
+                club=club,
                 club_id=ops['club_id'],
                 multimedias=multimedias,
                 api_domain=API_DOMAIN)

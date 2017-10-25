@@ -287,7 +287,19 @@ class AuthorizationHandler(BaseHandler):
                 self.redirect("/ops/auth/phone/login")
                 return
 
-
+    def get_club_info(self,club_id):
+        url = API_DOMAIN+"/api/clubs/"+club_id
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        club = data['rs']
+        if not club.has_key('img'):
+            club['img'] = ''
+        if not club.has_key('paragraphs'):
+            club['paragraphs'] = ''
+        return club
+        
     def get_current_user(self):
         self.set_secure_cookie("login_next", self.request.uri)
 

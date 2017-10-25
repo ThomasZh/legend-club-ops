@@ -10,7 +10,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Cache-Control" content="no-cache">
 
-  <title>{{ ops['club_name'] }} | 标签</title>
+  <title>{{ ops['club_name'] }} | 景区标签</title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
@@ -37,7 +37,7 @@
           <br />
 
           <!-- sidebar menu -->
-          {% module Template("ops/block-sidebar-menu.html") %}
+          {% module Template("ops/block-sidebar-menu.html", club=club) %}
           <!-- /sidebar menu -->
           <br />
 

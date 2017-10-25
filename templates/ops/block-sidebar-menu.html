@@ -38,12 +38,18 @@
       <li><a><i class="fa fa-gear"></i> 配置 <span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu" style="display: none">
           <li><a href="/ops/edit">加盟信息</a></li>
-          <li><a href="/ops/profile/ops-tags">标签</a></li>
+          {% if club['franchise_type'] == 'scenery' or club['franchise_type'] == u'景区' %}
+          <li><a href="/ops/profile/ops-franchise-tags">标签</a></li>
+          {% elif club['franchise_type'] == 'supplier' or club['franchise_type'] == u'供应商' %}
+          <li><a href="/ops/profile/ops-supplier-tags">标签</a></li>
+          {% end %}
           <li><a href="/ops/operators">管理员</a></li>
           <li><a href="/ops/profile/edit">个人信息</a></li>
+          {% if club['franchise_type'] == 'scenery' or club['franchise_type'] == u'景区' %}
           <li><a href="/ops/position">地址位置</a></li>
           <li><a href="/ops/passenger-flow">客流量</a></li>
           <li><a href="/ops/parking">停车场</a></li>
+          {% end %}
         </ul>
       </li>
     </ul>

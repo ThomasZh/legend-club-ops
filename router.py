@@ -32,7 +32,8 @@ def map():
 
         (r'/ops', getattr(work_sheet, 'OpsIndexHandler')),
         (r'/ops/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
-        (r'/ops/profile/ops-tags', getattr(work_sheet, 'OpsTagsHandler')),
+        (r'/ops/profile/ops-franchise-tags', getattr(work_sheet, 'OpsFranchiseTagsHandler')),
+        (r'/ops/profile/ops-supplier-tags', getattr(work_sheet, 'OpsSupplierTagsHandler')),
         (r'/ops/operators', getattr(work_sheet, 'OperatorsHandler')),
         (r'/ops/todo-list', getattr(work_sheet, 'TodoListHandler')),
         (r'/ops/articles/create', getattr(work_sheet, 'ArticlesCreateHandler')),
