@@ -84,6 +84,150 @@ class ProfileEditHandler(AuthorizationHandler):
         self.redirect("/ops/profile/edit")
 
 
+# 标签
+class OpsTagsHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        ops = self.get_ops_info()
+        # league_id = league_id
+        # counter = self.get_counter(league_id)
+
+        club_id = ops['club_id']
+        logging.info("got club_id",club_id)
+
+        # 查询一个加盟商所有的tags
+        url = API_DOMAIN + "/api/clubs/"+ club_id +"/categories"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers,)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        franchise_tags = data['rs']
+
+        # 景区分类tags
+        category_id = '757ee072a02511e7b7f600163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        hot_franchise_tags = data['rs']
+
+        for tag in hot_franchise_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        # 景区特色tags
+        category_id = '0c511b26a1e011e7943000163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        product_tags = data['rs']
+
+        for tag in product_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        # 景区适合对象tags
+        category_id = 'b1fb3e94a1e011e7943000163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        line_tags = data['rs']
+
+        for tag in line_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        # 旺季季节tags
+        category_id = '6955a40eb96911e7a70e00163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        hot_time_tags = data['rs']
+
+        for tag in hot_time_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        # 闭馆季节tags
+        category_id = 'dffc1ee4b96911e7a70e00163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        close_time_tags = data['rs']
+
+        for tag in close_time_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        # 旅游时长tags
+        category_id = '9a2f440eb96911e7a70e00163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        duration_tags = data['rs']
+
+        for tag in duration_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        self.render('ops/ops-tags.html',
+                ops=ops,
+                club_id=club_id,
+                hot_franchise_tags=hot_franchise_tags,
+                product_tags=product_tags,
+                line_tags=line_tags,
+                hot_time_tags=hot_time_tags,
+                close_time_tags=close_time_tags,
+                duration_tags=duration_tags,
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                franchise_tags=franchise_tags)
+
+
 class OperatorsHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
@@ -215,7 +359,7 @@ class VendorEditHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
         ops = self.get_ops_info()
-        
+
         url = API_DOMAIN+"/api/clubs/"+ops['club_id']
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
