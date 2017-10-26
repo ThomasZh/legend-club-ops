@@ -268,25 +268,48 @@
                       <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-
                       <form id="categories-form" action="" method="" onsubmit="return false;" class="form-horizontal form-label-left">
-
-                      <div class="form-group">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                          <div v-for="category in categories" class="checkbox">
-                            <input style="margin-left:0;" type="checkbox" id="categories" value="category._id" v-model="category.select">
-                            <label style="padding-left:30px;" for="categories">{{! category.title }}</label>
+                        <div class="form-group">
+                          <div class="col-md-12 col-sm-12 col-xs-12" id="cate-box">
+                            {% for article_categorie in article_categories %}
+                              {% if club['franchise_type'] == 'sencery' or club['franchise_type'] == u'景区' %}
+                                {% if article_categorie['_id'] != '2a28cb78f73411e69a3c00163e023e51' and article_categorie['_id'] != '404228663a1711e7b21000163e023e51' %}
+                                  {% if article_categorie['select'] == True %}
+                                  <div class="checkbox">
+                                    <input style="margin-left:0;" type="checkbox" checked value="{{ article_categorie['_id'] }}">
+                                    <label style="padding-left:30px;" for="categories">{{ article_categorie['title'] }}</label>
+                                  </div>
+                                  {% else %}
+                                  <div class="checkbox">
+                                    <input style="margin-left:0;" type="checkbox" value="{{ article_categorie['_id'] }}">
+                                    <label style="padding-left:30px;" for="categories">{{ article_categorie['title'] }}</label>
+                                  </div>
+                                  {% end %}
+                                {% end %}
+                              {% elif club['franchise_type'] == 'supplier' or club['franchise_type'] == u'供应商' %}
+                                {% if article_categorie['_id'] == '2a28cb78f73411e69a3c00163e023e51' or article_categorie['_id'] == '404228663a1711e7b21000163e023e51' %}
+                                  {% if article_categorie['select'] == True %}
+                                    <div class="checkbox">
+                                      <input style="margin-left:0;" type="checkbox" checked value="{{ article_categorie['_id'] }}">
+                                      <label style="padding-left:30px;" for="categories">{{ article_categorie['title'] }}</label>
+                                    </div>
+                                  {% else %}
+                                    <div class="checkbox">
+                                      <input style="margin-left:0;" type="checkbox" value="{{ article_categorie['_id'] }}">
+                                      <label style="padding-left:30px;" for="categories">{{ article_categorie['title'] }}</label>
+                                    </div>
+                                  {% end %}
+                                {% end %}
+                              {% end %}
+                            {% end %}
                           </div>
                         </div>
-                      </div>
-
-                      <div class="ln_solid"></div>
-                      <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                          <button type="button" v-on:click="saveCategories" class="btn btn-success">保存</button>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                          <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <button type="button" id="category-btn" class="btn btn-success">保存</button>
+                          </div>
                         </div>
-                      </div>
-
                       </form>
 
                     </div>
@@ -495,33 +518,18 @@
         }
       });
 
-    });
-  </script>
-
-  <script>
-  new Vue({
-    el: '#article-categories',
-    data: {
-      categories: [],
-    },
-    created: function() {
-      this.queryCategories();
-    },
-
-    methods: {
-      saveCategories: function() {
-        var _self = this;
-        console.log(_self.categories);
-        var category_ids = new Array();
-        for (var i=0;i<this.categories.length;i++) {
-          if (this.categories[i].select) {
-            category_ids.push(this.categories[i]._id);
+      // 修改文章分类
+      $('#category-btn').on('click',function(){
+        var inputs = $('#cate-box input[type=checkbox]');
+        var category_arr = new Array();
+        for (var i=0;i<inputs.length;i++) {
+          if (inputs[i].checked) {
+            category_arr.push(inputs[i].value);
           }
         }
-        var data = {'ids': category_ids}
+        var data = {'ids': category_arr}
         var json = JSON.stringify(data);
         console.log(json);
-
         var randomWord = Math.random().toString(36).substr(2);
         $.ajax({
           type: "POST",
@@ -531,8 +539,7 @@
           headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
-            console.log("saveCategories:"+data.rs);
-            _self.queryCategories();
+            console.log(data);
             weui.Loading.success();
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -543,30 +550,10 @@
             this; // 调用本次AJAX请求时传递的options参数
           }
         });
-      },
-      queryCategories: function() {
-        var _self = this;
-        var randomWord = Math.random().toString(36).substr(2);
-        $.ajax({
-          type: "GET",
-          url: "{{api_domain}}/api/articles/{{ article['_id'] }}/categories?random="+ randomWord +"",
-          dataType: "json",
-          headers: {"Authorization":"Bearer {{access_token}}"},
-          contentType: 'application/json',
-          success: function(data, status, xhr) {
-            console.log("queryCategories:"+data.rs);
-            _self.categories = data.rs;
-          },
-          error: function(XMLHttpRequest, textStatus, errorThrown) {
-            console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-          },
-          complete: function(XMLHttpRequest, textStatus) {
-            this; // 调用本次AJAX请求时传递的options参数
-          }
-        });
-      }
-    }
-  });
+      });
+
+    });
+
   </script>
   <!-- bootstrap-wysiwyg -->
   <script>

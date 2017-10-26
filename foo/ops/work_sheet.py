@@ -402,6 +402,13 @@ class ArticlesEditHandler(AuthorizationHandler):
         data = json_decode(response.body)
         article = data['rs']
 
+        url = API_DOMAIN+"/api/articles/" + article_id + "/categories"
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        article_categories = data['rs']
+
         ops = self.get_ops_info()
         club = self.get_club_info(ops['club_id'])
 
@@ -411,6 +418,7 @@ class ArticlesEditHandler(AuthorizationHandler):
                 club_id=ops['club_id'],
                 access_token=access_token,
                 article=article,
+                article_categories=article_categories,
                 api_domain=API_DOMAIN,
                 upyun_domain=UPYUN_DOMAIN,
                 upyun_notify_url=UPYUN_NOTIFY_URL,
