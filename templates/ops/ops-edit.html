@@ -29,6 +29,13 @@
     width: 120px;
     height: 30px;
   }
+  #open_time_hour,
+  #open_time_min,
+  #close_time_hour,
+  #close_time_min{
+    width: 60px;
+    height: 30px;
+  }
 </style>
 <body class="nav-md">
   <div class="container body">
@@ -286,6 +293,54 @@
                           </select>
                       </div>
                     </div>
+                    <div class="form-group">
+                      <label class="col-md-12 col-sm-12 col-xs-12" for="open_time_hour">开馆时间 <span class="required">*</span>
+                      </label>
+                      <div class="col-md-12 col-sm-6 col-xs-12">
+                          <select id="open_time_hour" name="open_time_hour">
+                            {% for i in range(0,24) %}
+              								{% if int(club['open_time_hour']) == i %}
+              									<option selected="">{{ i }}</option>
+              								{% else %}
+              									<option>{{ i }}</option>
+              								{% end %}
+              							{% end %}
+                          </select>&nbsp;时
+                          <select id="open_time_min" name="open_time_min">
+                            {% for i in range(0,60,15) %}
+              								{% if int(club['open_time_min']) == i %}
+              									<option selected="">{{ i }}</option>
+              								{% else %}
+              									<option>{{ i }}</option>
+              								{% end %}
+              							{% end %}
+                          </select>&nbsp;分
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-12 col-sm-12 col-xs-12" for="close_time_hour">闭馆时间 <span class="required">*</span>
+                      </label>
+                      <div class="col-md-12 col-sm-6 col-xs-12">
+                          <select id="close_time_hour" name="close_time_hour">
+                            {% for i in range(0,23) %}
+              								{% if int(club['close_time_hour']) == i %}
+              									<option selected="">{{ i }}</option>
+              								{% else %}
+              									<option>{{ i }}</option>
+              								{% end %}
+              							{% end %}
+                          </select>&nbsp;时
+                          <select id="close_time_min" name="close_time_min">
+                            {% for i in range(0,60,15) %}
+              								{% if int(club['close_time_min']) == i %}
+              									<option selected="">{{ i }}</option>
+              								{% else %}
+              									<option>{{ i }}</option>
+              								{% end %}
+              							{% end %}
+                          </select>&nbsp;分
+                      </div>
+                    </div>
                     {% end %}
                     <div class="form-group">
                       <label class="col-md-8 col-sm-6 col-xs-12" for="subtitle">
@@ -511,13 +566,21 @@
           var city=$("#city option:selected").text();
           var img = $("#img").val();
           var level=$("#level option:selected").val();
+          var open_time_hour=$("#open_time_hour option:selected").text();
+          var open_time_min=$("#open_time_min option:selected").text();
+          var close_time_hour=$("#close_time_hour option:selected").text();
+          var close_time_min=$("#close_time_min option:selected").text();
           var data = {
             "name": title,
             "introduction": subtitle,
             "img": img,
             "province":prov,
             "city":city,
-            "scenery":level
+            "scenery":level,
+            "open_time_hour":open_time_hour,
+            "open_time_min":open_time_min,
+            "close_time_hour":close_time_hour,
+            "close_time_min":close_time_min
           };
           var json = JSON.stringify(data);
           // console.log(json);
