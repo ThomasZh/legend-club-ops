@@ -24,6 +24,7 @@ UPYUN_FORM_API_SECRET = "CRKAOsKHGbbCnU+yztBxUT0bYR0="
 UPYUN_BUCKET = "tripc2c-club-title"
 
 API_DOMAIN = "http://7x24hs.com"
+REGISTER_DOMAIN = "http://register.7x24hs.com"
 
 DEFAULT_USER_AVATAR = "http://tripc2c-person-face.b0.upaiyun.com/default/user.png"
 DEFAULT_USER_NICKNAME = "匿名"

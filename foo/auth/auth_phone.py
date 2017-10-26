@@ -44,7 +44,9 @@ class AuthPhoneLoginHandler(BaseHandler):
     def get(self):
         logging.info(self.request)
         err_msg = ""
-        self.render('auth/phone-login.html', err_msg=err_msg)
+        self.render('auth/phone-login.html',
+            REGISTER_DOMAIN=REGISTER_DOMAIN,
+            err_msg=err_msg)
 
     def post(self):
         logging.info(self.request)
@@ -73,7 +75,9 @@ class AuthPhoneLoginHandler(BaseHandler):
             session_ticket = None
             if data['err_code'] == 404:
                 err_msg = "手机号码或密码不正确!"
-                self.render('auth/phone-login.html', err_msg=err_msg)
+                self.render('auth/phone-login.html',
+                    REGISTER_DOMAIN=REGISTER_DOMAIN,
+                    err_msg=err_msg)
                 return
             else:
                 session_ticket = data['rs']
@@ -92,7 +96,9 @@ class AuthPhoneLoginHandler(BaseHandler):
                 ops = None
                 if data['err_code'] == 404:
                     err_msg = "您不是景区或供应商管理员!"
-                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    self.render('auth/phone-login.html',
+                        REGISTER_DOMAIN=REGISTER_DOMAIN,
+                        err_msg=err_msg)
                     return
                 else:
                     ops = data['rs']
@@ -102,11 +108,15 @@ class AuthPhoneLoginHandler(BaseHandler):
                 logging.error("error: %r info: %r", err_title, err_detail)
                 if err_detail == 'HTTP 404: Not Found':
                     err_msg = "您不是景区或供应商管理员!"
-                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    self.render('auth/phone-login.html',
+                        REGISTER_DOMAIN=REGISTER_DOMAIN,
+                        err_msg=err_msg)
                     return
                 else:
                     err_msg = "系统故障, 请稍后尝试!"
-                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    self.render('auth/phone-login.html',
+                        REGISTER_DOMAIN=REGISTER_DOMAIN,
+                        err_msg=err_msg)
                     return
 
             self.set_secure_cookie("access_token", session_ticket['access_token'])
@@ -118,11 +128,15 @@ class AuthPhoneLoginHandler(BaseHandler):
             logging.error("error: %r info: %r", err_title, err_detail)
             if err_detail == 'HTTP 404: Not Found':
                 err_msg = "手机号码或密码不正确!"
-                self.render('auth/phone-login.html', err_msg=err_msg)
+                self.render('auth/phone-login.html',
+                    REGISTER_DOMAIN=REGISTER_DOMAIN,
+                    err_msg=err_msg)
                 return
             else:
                 err_msg = "系统故障, 请稍后尝试!"
-                self.render('auth/phone-login.html', err_msg=err_msg)
+                self.render('auth/phone-login.html',
+                    REGISTER_DOMAIN=REGISTER_DOMAIN,
+                    err_msg=err_msg)
                 return
 
         self.redirect('/')
