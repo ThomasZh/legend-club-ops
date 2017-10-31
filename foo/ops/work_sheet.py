@@ -405,7 +405,7 @@ class ArticlesEditHandler(AuthorizationHandler):
         url = API_DOMAIN+"/api/articles/" + article_id + "/categories"
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
+        logging.info("got categories response=[%r]", response.body)
         data = json_decode(response.body)
         article_categories = data['rs']
 

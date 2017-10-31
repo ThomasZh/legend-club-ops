@@ -272,7 +272,7 @@
                         <div class="form-group">
                           <div class="col-md-12 col-sm-12 col-xs-12" id="cate-box">
                             {% for article_categorie in article_categories %}
-                              {% if club['franchise_type'] == 'sencery' or club['franchise_type'] == u'景区' %}
+                              {% if club['franchise_type'] == 'scenery' or club['franchise_type'] == u'景区' %}
                                 {% if article_categorie['_id'] != '2a28cb78f73411e69a3c00163e023e51' and article_categorie['_id'] != '404228663a1711e7b21000163e023e51' %}
                                   {% if article_categorie['select'] == True %}
                                   <div class="checkbox">
@@ -287,7 +287,7 @@
                                   {% end %}
                                 {% end %}
                               {% elif club['franchise_type'] == 'supplier' or club['franchise_type'] == u'供应商' %}
-                                {% if article_categorie['_id'] == '2a28cb78f73411e69a3c00163e023e51' or article_categorie['_id'] == '404228663a1711e7b21000163e023e51' %}
+                                {% if article_categorie['_id'] == '2a28cb78f73411e69a3c00163e023e51' %}
                                   {% if article_categorie['select'] == True %}
                                     <div class="checkbox">
                                       <input style="margin-left:0;" type="checkbox" checked value="{{ article_categorie['_id'] }}">
