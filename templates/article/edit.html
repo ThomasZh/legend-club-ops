@@ -189,7 +189,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
 
@@ -465,7 +465,6 @@
         },
         errorClass: "form-invalid",
         submitHandler: function(form) {
-          console.log('create article');
 
           var title = $("#title").val();
           var subtitle = $("#subtitle").val();
@@ -476,7 +475,6 @@
             "img": img,
           };
           var json = JSON.stringify(data);
-          console.log(json);
 
           $.ajax({
             type: "PUT",
@@ -510,7 +508,6 @@
         }
         var data = {'ids': category_arr}
         var json = JSON.stringify(data);
-        console.log(json);
         var randomWord = Math.random().toString(36).substr(2);
         $.ajax({
           type: "POST",
@@ -520,7 +517,6 @@
           headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
-            console.log(data);
             weui.Loading.success();
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
