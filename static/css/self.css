@@ -36,6 +36,6 @@ textarea::-webkit-input-placeholder {
   color:#39e6ac;
 }
 .wysiwyg-img{
-  max-width: 80%;
+  max-width: 60%;
   height: auto;
 }

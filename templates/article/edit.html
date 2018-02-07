@@ -189,9 +189,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
-                <textarea id="paragraphs" name="paragraphs" rows=6 class="form-control col-md-7 col-xs-12"></textarea>
-                </div> -->
+                            
                         </div>
                     </div>
 
@@ -257,7 +255,6 @@
                     </div>
                   </div>
                 </div>
-
 
                 <div id="article-categories" class="col-md-4 col-sm-4 col-xs-12">
                   <div class="x_panel">
@@ -330,17 +327,7 @@
     </div>
   </div>
 
-  <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
-  <!-- gauge js -->
-  <script src="{{ static_url('gentelella/gauge.js/dist/gauge.min.js') }}" type="text/javascript"></script>
-  <!-- bootstrap progress js -->
-  <script src="{{ static_url('gentelella/bootstrap-progressbar/bootstrap-progressbar.min.js') }}" type="text/javascript"></script>
-  <!-- icheck -->
-  <script src="{{ static_url('gentelella/iCheck/icheck.min.js') }}" type="text/javascript"></script>
-  <!-- daterangepicker -->
-  <script src="{{ static_url('gentelella/moment/min/moment.min.js') }}" type="text/javascript"></script>
-  <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
-  <!-- bootstrap-wysiwyg -->
+  <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script><!-- bootstrap-wysiwyg -->
   <script src="{{ static_url('gentelella/bootstrap-wysiwyg/src/bootstrap-wysiwyg.js') }}"></script>
   <script src="{{ static_url('gentelella/jquery.hotkeys/jquery.hotkeys.js') }}"></script>
   <script src="{{ static_url('gentelella/google-code-prettify/src/prettify.js') }}"></script>
@@ -360,7 +347,6 @@
   <script src="{{ static_url('upyun/js/upyun-mu.js') }}"></script>
 
   <script>
-
       // with plugin options
       $("#file1").fileinput({
           'showCaption': false, //是否显示标题
@@ -429,9 +415,7 @@
 
   <script>
     $(function() {
-      // Create Form
-      //----------------------------------------------
-      // Validation
+
       //修改文章内容
       $("#create-form").validate({
         rules: {
@@ -442,13 +426,10 @@
         errorClass: "form-invalid",
         submitHandler: function(form) {
           var paragraphs = $("#editor").html();
-          console.log(paragraphs);
           var data = {
             "paragraphs": paragraphs,
           };
           var json = JSON.stringify(data);
-          console.log(json);
-
           $.ajax({
             type: "PUT",
             url: "{{api_domain}}/api/articles/{{ article['_id'] }}",
